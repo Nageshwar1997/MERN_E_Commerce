@@ -224,6 +224,7 @@ export default function ProductDetails() {
                   sx={{
                     px: "2rem",
                     py: "1rem",
+                    my: "1rem",
                     bgcolor: "#9155fd",
                     "&:hover": { bgcolor: "#7a42f5" },
                   }}
