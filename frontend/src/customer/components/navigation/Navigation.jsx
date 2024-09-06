@@ -17,6 +17,7 @@ import { deepPurple } from "@mui/material/colors";
 // import { getCart } from "../../../Redux/Customers/Cart/Action";
 // import TextField from "@mui/material/TextField";
 import { navigationData } from "./navigationData";
+import { useNavigate } from "react-router-dom";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -24,7 +25,7 @@ function classNames(...classes) {
 
 export default function Navigation() {
   const [open, setOpen] = useState(false);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   // const dispatch = useDispatch();
   // const { auth, cart } = useSelector((store) => store);
   const [openAuthModal, setOpenAuthModal] = useState(false);
@@ -54,10 +55,10 @@ export default function Navigation() {
     setOpenAuthModal(false);
   };
 
-  // const handleCategoryClick = (category, section, item, close) => {
-  //   navigate(`/${category.id}/${section.id}/${item.id}`);
-  //   close();
-  // };
+  const handleCategoryClick = (category, section, item, close) => {
+    navigate(`/${category.id}/${section.id}/${item.id}`);
+    close();
+  };
 
   // useEffect(() => {
   //   if (auth.user) {
@@ -367,14 +368,14 @@ export default function Navigation() {
                                                 className="flex"
                                               >
                                                 <p
-                                                  // onClick={() =>
-                                                  //   handleCategoryClick(
-                                                  //     category,
-                                                  //     section,
-                                                  //     item,
-                                                  //     close
-                                                  //   )
-                                                  // }
+                                                  onClick={() =>
+                                                    handleCategoryClick(
+                                                      category,
+                                                      section,
+                                                      item,
+                                                      close
+                                                    )
+                                                  }
                                                   className="cursor-pointer hover:text-gray-800"
                                                 >
                                                   {item.name}
@@ -446,6 +447,7 @@ export default function Navigation() {
                         }}
                       >
                         <MenuItem
+                          onClick={() => navigate("/account/order")}
                         // onClick={handleMyOrderClick}
                         >
                           {/* {auth.user?.role === "ROLE_ADMIN" */}
