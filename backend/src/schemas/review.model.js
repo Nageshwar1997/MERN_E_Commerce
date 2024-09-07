@@ -15,3 +15,5 @@ const reviewSchema = new mongoose.Schema(
     versionKey: false,
   }
 );
+
+module.exports = reviewSchema;
