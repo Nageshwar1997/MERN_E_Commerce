@@ -18,16 +18,6 @@ function App() {
       <Routes>
         <Route path="/*" element={<CustomerRoutes />} />
       </Routes>
-
-      {/* <div> */}
-      {/* <HomePage /> */}
-      {/* <Product /> */}
-      {/* <ProductDetails /> */}
-      {/* <Cart/> */}
-      {/* <Checkout/> */}
-      {/* <Order/> */}
-      {/* <OrderDetails /> */}
-      {/* </div> */}
     </Router>
   );
 }

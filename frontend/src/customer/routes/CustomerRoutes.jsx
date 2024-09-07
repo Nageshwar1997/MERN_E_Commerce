@@ -14,8 +14,6 @@ const CustomerRoutes = () => {
     <div>
       <Navigation />
       <Routes>
-        {/* <Order/> */}
-        {/* <OrderDetails /> */}
         <Route path="/" element={<HomePage />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/:levelOne/:levelTwo/:levelThree" element={<Product />} />
