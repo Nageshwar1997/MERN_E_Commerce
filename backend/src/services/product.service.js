@@ -199,6 +199,8 @@ const createMultipleProducts = async (products) => {
     products.forEach(async (product) => {
       await createProduct(product);
     });
+
+    return "Products created successfully";
   } catch (error) {
     throw new Error(error.message || "Failed to create multiple products");
   }

@@ -3,7 +3,7 @@ const {
   getAllUsers,
 } = require("../services/user.service");
 
-const getUserProfile = async (req, res) => {
+const getUserProfileController = async (req, res) => {
   try {
     // Extract JWT token from Authorization header
     const jwtToken = req.headers.authorization?.split(" ")[1];
@@ -47,7 +47,7 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-const getAllUsersProfiles = async (req, res) => {
+const getAllUsersProfilesController = async (req, res) => {
   try {
     // Fetch all users
     const users = await getAllUsers();
@@ -73,6 +73,6 @@ const getAllUsersProfiles = async (req, res) => {
 };
 
 module.exports = {
-  getUserProfile,
-  getAllUsersProfiles,
+  getUserProfileController,
+  getAllUsersProfilesController,
 };

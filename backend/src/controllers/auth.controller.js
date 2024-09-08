@@ -4,7 +4,7 @@ const { createUser, getUserByEmail } = require("../services/user.service");
 const { createCart } = require("../services/cart.service");
 const UserModel = require("../models/user.model");
 
-const registerUser = async (req, res) => {
+const registerUserController = async (req, res) => {
   try {
     const { firstName, lastName, email, password, phoneNumber } = req.body;
 
@@ -98,7 +98,7 @@ const registerUser = async (req, res) => {
   }
 };
 
-const loginUser = async (req, res) => {
+const loginUserController = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -168,4 +168,4 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+module.exports = { registerUserController, loginUserController };
