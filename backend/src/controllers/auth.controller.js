@@ -148,6 +148,8 @@ const loginUserController = async (req, res) => {
       });
     }
 
+    console.log("User", user);
+
     // Generate token
     const token = await generateToken(user._id);
 
