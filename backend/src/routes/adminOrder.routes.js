@@ -8,29 +8,33 @@ const {
   cancelOrderByAdminController,
   deleteOrderByAdminController,
 } = require("../controllers/adminOrder.controller");
-const adminRouter = express.Router();
+const adminOrderRouter = express.Router();
 
-adminRouter.get("/", authenticateUser, getAllOrdersByAdminController);
-adminRouter.put(
+adminOrderRouter.get("/", authenticateUser, getAllOrdersByAdminController);
+adminOrderRouter.put(
   "/:orderId/confirm",
   authenticateUser,
   confirmOrderByAdminController
 );
-adminRouter.put("/:orderId/ship", authenticateUser, shipOrderByAdminController);
-adminRouter.put(
+adminOrderRouter.put(
+  "/:orderId/ship",
+  authenticateUser,
+  shipOrderByAdminController
+);
+adminOrderRouter.put(
   "/:orderId/deliver",
   authenticateUser,
   deliverOrderByAdminController
 );
-adminRouter.put(
+adminOrderRouter.put(
   "/:orderId/cancel",
   authenticateUser,
   cancelOrderByAdminController
 );
-adminRouter.put(
+adminOrderRouter.put(
   "/:orderId/delete",
   authenticateUser,
   deleteOrderByAdminController
 );
 
-module.exports = adminRouter;
+module.exports = adminOrderRouter;
