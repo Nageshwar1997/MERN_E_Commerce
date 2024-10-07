@@ -1,5 +1,6 @@
-const AddressModel = require("../models/address.model");
-const OrderModel = require("../models/order.model");
+const Address = require("../models/address.model");
+const Order = require("../models/order.model");
+const OrderItem = require("../models/orderItems");
 const { findUserCart } = require("./cart.service");
 
 const createOrder = async (user, shippingAddress) => {
@@ -7,11 +8,11 @@ const createOrder = async (user, shippingAddress) => {
     let address;
 
     if (shippingAddress._id) {
-      let existAddress = await AddressModel.findById(shippingAddress._id);
+      let existAddress = await Address.findById(shippingAddress._id);
 
       address = existAddress;
     } else {
-      address = new AddressModel(shippingAddress);
+      address = new Address(shippingAddress);
       address.user = user;
       await address.save();
 
@@ -20,29 +21,30 @@ const createOrder = async (user, shippingAddress) => {
     }
 
     const cart = await findUserCart(user._id);
-    const orderProducts = [];
+    const orderItems = [];
 
-    cart.products.forEach((product) => {
-      const orderProduct = new orderProducts({
-        price: product.price,
-        product: product.product,
-        quantity: product.quantity,
-        size: product.size,
-        userId: product.userId,
-        discountedPrice: product.discountedPrice,
+    cart.orderItems.forEach((item) => {
+      const orderItem = new OrderItem({
+        price: item.price,
+        product: item.product,
+        quantity: item.quantity,
+        size: item.size,
+        userId: item.userId,
+        discountedPrice: item.discountedPrice,
       });
 
-      const createdOrderProduct = orderProduct.save();
-      orderProducts.push(createdOrderProduct);
+      const createdOrderItem = orderItem.save();
+
+      orderItems.push(createdOrderItem);
     });
 
-    const createdOrder = new OrderModel({
+    const createdOrder = new Order({
       user,
-      orderProducts,
+      orderItems,
       totalPrice: cart.totalPrice,
       totalDiscountedPrice: cart.totalDiscountedPrice,
       totalDiscount: cart.totalDiscount,
-      totalProducts: cart.totalProducts,
+      totalItems: cart.totalItems,
       shippingAddress: address,
     });
 
@@ -57,8 +59,13 @@ const createOrder = async (user, shippingAddress) => {
 const placeOrder = async (orderId) => {
   try {
     const order = await findOrderById(orderId);
+
+    if (!order) {
+      throw new Error("Order not found");
+    }
+
     order.orderStatus = "PLACED";
-    order.paymentDetails = "COMPLETED";
+    order.paymentDetails.paymentStatus = "COMPLETED";
 
     const savedOrder = await order.save();
     return savedOrder;
@@ -67,59 +74,83 @@ const placeOrder = async (orderId) => {
   }
 };
 
+// it's for admin
 const confirmOrder = async (orderId) => {
   try {
     const order = await findOrderById(orderId);
+
+    if (!order) {
+      throw new Error("Order not found");
+    }
+
     order.orderStatus = "CONFIRMED";
 
     const savedOrder = await order.save();
     return savedOrder;
   } catch (error) {
-    throw new Error(error.message || "Failed to confirm order");
+    throw new Error(error.message || "Failed to place order");
   }
 };
 
+// it's for admin
 const shipOrder = async (orderId) => {
   try {
     const order = await findOrderById(orderId);
+
+    if (!order) {
+      throw new Error("Order not found");
+    }
+
     order.orderStatus = "SHIPPED";
 
     const savedOrder = await order.save();
     return savedOrder;
   } catch (error) {
-    throw new Error(error.message || "Failed to ship order");
+    throw new Error(error.message || "Failed to place order");
   }
 };
 
+// it's for admin
 const deliverOrder = async (orderId) => {
   try {
     const order = await findOrderById(orderId);
+
+    if (!order) {
+      throw new Error("Order not found");
+    }
+
     order.orderStatus = "DELIVERED";
 
     const savedOrder = await order.save();
     return savedOrder;
   } catch (error) {
-    throw new Error(error.message || "Failed to deliver order");
+    throw new Error(error.message || "Failed to place order");
   }
 };
 
+// it's for admin
 const cancelOrder = async (orderId) => {
   try {
     const order = await findOrderById(orderId);
+
+    if (!order) {
+      throw new Error("Order not found");
+    }
+
     order.orderStatus = "CANCELLED";
 
     const savedOrder = await order.save();
     return savedOrder;
   } catch (error) {
-    throw new Error(error.message || "Failed to cancel order");
+    throw new Error(error.message || "Failed to place order");
   }
 };
 
 const findOrderById = async (orderId) => {
   try {
-    const order = await OrderModel.findById(orderId)
+    const order = await Order.findById(orderId)
       .populate("user")
-      .populate({ path: "orderProducts", populate: { path: "product" } })
+      .populate({ path: "orderItems", populate: { path: "product" } })
       .populate("shippingAddress");
 
     if (!order) {
@@ -134,11 +165,11 @@ const findOrderById = async (orderId) => {
 
 const usersOrderHistory = async (userId) => {
   try {
-    const orders = await OrderModel.find({
+    const orders = await Order.find({
       user: userId,
-      orderStatus: "PLACED",
+      orderStatus: "PLACED" || "CONFIRMED" || "SHIPPED" || "DELIVERED", // if not working just write "PLACED"
     })
-      .populate({ path: "orderProducts", populate: { path: "product" } })
+      .populate({ path: "orderItems", populate: { path: "product" } })
       .lean();
 
     if (!orders) {
@@ -150,11 +181,12 @@ const usersOrderHistory = async (userId) => {
     throw new Error(error.message || "Failed to find orders");
   }
 };
+
 // It's for admin
 const getAllOrders = async () => {
   try {
-    const allOrders = await OrderModel.find()
-      .populate({ path: "orderProducts", populate: { path: "product" } })
+    const allOrders = await Order.find()
+      .populate({ path: "orderItems", populate: { path: "product" } })
       .lean();
 
     return allOrders;
@@ -171,7 +203,7 @@ const deleteOrder = async (orderId) => {
       throw new Error(`Order not found with id ${orderId}`);
     }
 
-    await OrderModel.findByIdAndDelete(order._id);
+    await Order.findByIdAndDelete(order._id);
     return true;
   } catch (error) {
     throw new Error(error.message || "Failed to delete order");

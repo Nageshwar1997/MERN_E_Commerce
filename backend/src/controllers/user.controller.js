@@ -1,25 +1,34 @@
-const {
-  getUserProfileByToken,
-  getAllUsers,
-} = require("../services/user.service");
+const { getUserProfileByToken } = require("../services/user.service");
+const { getAllUsers } = require("../services/user.service");
 
-const getUserProfileController = async (req, res) => {
+const getUserProfile = async (req, res) => {
   try {
-    // Extract JWT token from Authorization header
-    const jwtToken = req.headers.authorization?.split(" ")[1];
+    if (!req.headers) {
+      return res.status(401).json({
+        success: false,
+        error: true,
+        message: "Headers not found",
+      });
+    }
+    if (!req.headers.authorization) {
+      return res.status(401).json({
+        success: false,
+        error: true,
+        message: "Authorization not found",
+      });
+    }
 
-    if (!jwtToken) {
-      return res.status(400).json({
+    const token = req.headers.authorization.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({
         success: false,
         error: true,
         message: "Token not found",
       });
     }
-    console.log("Token", jwtToken);
-    
 
-    // Retrieve user profile using the token
-    const user = await getUserProfileByToken(jwtToken);
+    const user = await getUserProfileByToken(token);
 
     if (!user) {
       return res.status(404).json({
@@ -29,7 +38,6 @@ const getUserProfileController = async (req, res) => {
       });
     }
 
-    // Return user profile if found
     return res.status(200).json({
       success: true,
       error: false,
@@ -37,7 +45,6 @@ const getUserProfileController = async (req, res) => {
       user,
     });
   } catch (error) {
-    // Log and return the error
     console.error("Error retrieving user profile:", error);
     return res.status(500).json({
       success: false,
@@ -47,12 +54,10 @@ const getUserProfileController = async (req, res) => {
   }
 };
 
-const getAllUsersProfilesController = async (req, res) => {
+const getAllUsersProfiles = async (req, res) => {
   try {
-    // Fetch all users
     const users = await getAllUsers();
 
-    // Return successful response with user data
     return res.status(200).json({
       success: true,
       error: false,
@@ -60,10 +65,7 @@ const getAllUsersProfilesController = async (req, res) => {
       users,
     });
   } catch (error) {
-    // Log the error for debugging
     console.error("Error retrieving users:", error);
-
-    // Return error response
     return res.status(500).json({
       success: false,
       error: true,
@@ -73,6 +75,6 @@ const getAllUsersProfilesController = async (req, res) => {
 };
 
 module.exports = {
-  getUserProfileController,
-  getAllUsersProfilesController,
+  getUserProfile,
+  getAllUsersProfiles,
 };

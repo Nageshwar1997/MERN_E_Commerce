@@ -1,6 +1,17 @@
-const mongoose = require("mongoose");
-const reviewSchema = require("../schemas/review.schema");
+const { model, Schema } = require("mongoose");
 
-const ReviewModel = mongoose.model("Review", reviewSchema);
+const ReviewSchema = new Schema(
+  {
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    product: { type: Schema.Types.ObjectId, ref: "Product", required: true },
+    review: { type: String, required: true },
+  },
+  {
+    versionKey: false,
+    timestamps: true,
+  }
+);
 
-module.exports = ReviewModel;
+const Review = model("Review", ReviewSchema);
+
+module.exports = Review;

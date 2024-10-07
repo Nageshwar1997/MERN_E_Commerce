@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const generateToken = async (userId) => {
   try {
     const token = await jwt.sign({ userId }, process.env.JWT_SECRET_KEY, {
-      expiresIn: "10d",
+      expiresIn: "30d",
     });
     if (!token) {
       throw new Error("Failed to generate token");

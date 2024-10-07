@@ -1,29 +1,29 @@
-const bcrypt = require("bcrypt");
-const UserModel = require("../models/user.model");
-const { getUserIdFromToken } = require("../configs/jwtProvider");
+const bcrypt = require("bcryptjs");
 
+const User = require("../models/user.model");
+const { getUserIdFromToken } = require("../providers/jwt.provider");
 const createUser = async (userData) => {
   try {
-    const { firstName, lastName, email, password, phoneNumber } = userData;
+    const { firstName, lastName, email, password, mobileNumber } = userData;
 
-    const isExistUser = await UserModel.findOne({ email });
-    if (isExistUser) {
+    const isUserExist = await User.findOne({ email: new RegExp(`^${email}$`, "i") });
+
+    if (isUserExist) {
       throw new Error(`User already exists with email ${email}`);
     }
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hashSync(password, 10);
 
-    // Create the new user
-    const user = await UserModel.create({
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
+    const user = new User({
+      firstName: firstName.toLowerCase(),
+      lastName: lastName.toLowerCase(),
+      email: email.toLowerCase(),
       password: hashedPassword,
+      mobileNumber,
     });
-    console.log("User", user);
-    return user;
+
+    const savedUser = await user.save();
+    return savedUser;
   } catch (error) {
     throw new Error(error.message || "Failed to create user");
   }
@@ -31,8 +31,8 @@ const createUser = async (userData) => {
 
 const findUserById = async (userId) => {
   try {
-    const user = await UserModel.findById(userId);
-    // .populate("Address");
+    const user = await User.findById(userId);
+    // .populate("addresses");
 
     if (!user) {
       throw new Error(`User not found with id ${userId}`);
@@ -46,7 +46,7 @@ const findUserById = async (userId) => {
 
 const getUserByEmail = async (email) => {
   try {
-    const user = await UserModel.findOne({ email: email.toLowerCase() });
+    const user = await User.findOne({ email: new RegExp(`^${email}$`, "i") });
 
     if (!user) {
       throw new Error(`User not found with email ${email}`);
@@ -66,9 +66,7 @@ const getUserProfileByToken = async (token) => {
     if (!user) {
       throw new Error(`User not found with id ${userId}`);
     }
-
-    console.log("User", user);
-
+    // console.log("User", user);
     return user;
   } catch (error) {
     throw new Error(error.message || "Failed to find user");
@@ -77,7 +75,7 @@ const getUserProfileByToken = async (token) => {
 
 const getAllUsers = async () => {
   try {
-    const users = await UserModel.find();
+    const users = await User.find();
     return users;
   } catch (error) {
     throw new Error(error.message || "Failed to get users");

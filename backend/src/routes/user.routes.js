@@ -1,11 +1,13 @@
-const express = require("express");
+const { Router } = require("express");
 const {
-  getUserProfileController,
-  getAllUsersProfilesController,
+  getUserProfile,
+  getAllUsersProfiles,
 } = require("../controllers/user.controller");
-const userRouter = express.Router();
 
-userRouter.get("/profile", getUserProfileController);
-userRouter.get("/", getAllUsersProfilesController);
+const userRouter = Router();
+
+userRouter.get("/profile", getUserProfile);
+userRouter.get("/", getAllUsersProfiles);
+
 
 module.exports = userRouter;

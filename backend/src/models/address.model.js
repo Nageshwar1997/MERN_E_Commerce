@@ -1,6 +1,24 @@
-const mongoose = require("mongoose");
-const addressSchema = require("../schemas/address.schema");
+const { model, Schema } = require("mongoose");
 
-const AddressModel = mongoose.model("Address", addressSchema);
+const AddressSchema = new Schema(
+  {
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    street: { type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    zip: { type: Number, required: true },
+    country: { type: String, required: true },
+    mobileNumber: { type: String, required: true },
+    alternateMobileNumber: String,
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  },
+  {
+    versionKey: false,
+    timestamps: true,
+  }
+);
 
-module.exports = AddressModel;
+const Address = model("Address", AddressSchema);
+
+module.exports = Address;

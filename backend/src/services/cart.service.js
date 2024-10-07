@@ -1,17 +1,17 @@
-const CartModel = require("../models/cart.model");
-const CartProductModel = require("../models/cartProduct.model");
-const ProductModel = require("../models/product.model");
+const Cart = require("../models/cart.model");
+const CartItem = require("../models/cartItem.model");
+const Product = require("../models/product.model");
 
 const createCart = async (user) => {
   try {
-    /*
-    const cart = new CartModel({ user });
+    const cart = new Cart({ user });
     const createdCart = await cart.save();
     return createdCart;
-    */
-    // OR
-    const createdCart = await CartModel.create({ user });
+
+    /** OR
+    const createdCart = await Cart.create({ user });
     return createdCart;
+     */
   } catch (error) {
     throw new Error(error.message || "Failed to create cart");
   }
@@ -19,28 +19,26 @@ const createCart = async (user) => {
 
 const findUserCart = async (userId) => {
   try {
-    let cart = await CartModel.findOne({ user: userId });
-    const cartProducts = await CartProductModel.find({
-      cart: cart._id,
-    }).populate("Product");
+    let cart = await Cart.findOne({ user: userId });
+    let cartItems = await CartItem.find({ cart: cart._id }).populate("product");
 
-    cart.products = cartProducts;
+    cart.cartItems = cartItems;
     let totalPrice = 0;
     let totalDiscountedPrice = 0;
-    let totalDiscount = 0;
-    let totalProducts = 0;
+    let totalItems = 0;
 
-    cartProducts.forEach((product) => {
-      totalPrice += product.price;
-      totalDiscountedPrice += product.discountedPrice;
-      totalDiscount += product.discount;
-      totalProducts += product.quantity;
+    cartItems.forEach((cartItem) => {
+      totalPrice += cartItem.price;
+      totalDiscountedPrice += cartItem.discountedPrice;
+      totalItems += cartItem.quantity;
     });
 
     cart.totalPrice = totalPrice;
     cart.totalDiscountedPrice = totalDiscountedPrice;
-    cart.totalDiscount = totalDiscount;
-    cart.totalProducts = totalProducts;
+    cart.totalItems = totalItems;
+    cart.totalDiscount = totalPrice - totalDiscountedPrice;
+
+    await cart.save();
 
     return cart;
   } catch (error) {
@@ -48,48 +46,51 @@ const findUserCart = async (userId) => {
   }
 };
 
-const addCartProduct = async (userId, reqData) => {
+const addCartItem = async (userId, reqData) => {
   try {
-    const cart = await CartModel.findOne({ user: userId });
+    const cart = await Cart.findOne({ user: userId });
+
     if (!cart) {
       throw new Error("Cart not found");
     }
 
-    const product = await ProductModel.findById(reqData.productId);
+    const product = await Product.findById(reqData.productId);
     if (!product) {
       throw new Error("Product not found");
     }
 
-    const existingProduct = await CartProductModel.findOne({
+    const productInCart = await CartItem.findOne({
       cart: cart._id,
       product: product._id,
       userId,
     });
 
-    if (!existingProduct) {
-      const cartProduct = new CartProductModel({
+    if (!productInCart) {
+      const cartItem = new CartItem({
         product: product._id,
         cart: cart._id,
+        quantity: reqData.quantity,
         userId,
         price: product.price,
-        discountedPrice: product.discountedPrice,
-        size: product.size,
+        size: reqData.size,
         discountedPrice: product.discountedPrice,
       });
-      const createdCartProduct = await cartProduct.save();
 
-      cart.products.push(createdCartProduct);
+      const createdCartItem = await cartItem.save();
+
+      cart.cartItems.push(createdCartItem);
+
       await cart.save();
 
-      return "Product added to cart";
-    }
-
-    if (existingProduct) {
-      throw new Error("Product already in cart");
+      return createdCartItem;
     }
   } catch (error) {
-    throw new Error(error.message || "Failed to add product to cart");
+    throw new Error(error.message || "Failed to add cart item");
   }
 };
 
-module.exports = { createCart, findUserCart, addCartProduct };
+module.exports = {
+  createCart,
+  findUserCart,
+  addCartItem,
+};
