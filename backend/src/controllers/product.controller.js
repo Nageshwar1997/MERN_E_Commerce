@@ -9,7 +9,6 @@ const {
 
 const createProductController = async (req, res) => {
   try {
-    // console.log("req.body", req.body);
     const product = await createProduct(req.body);
 
     if (!product) {
@@ -125,7 +124,6 @@ const findProductByIdController = async (req, res) => {
 const getAllProductsController = async (req, res) => {
   try {
     const products = await getAllProducts(req.query);
-    console.log(products)
 
     if (!products) {
       return res.status(400).json({
