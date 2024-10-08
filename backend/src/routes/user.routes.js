@@ -1,13 +1,12 @@
 const { Router } = require("express");
 const {
-  getUserProfile,
-  getAllUsersProfiles,
+  getUserProfileController,
+  getAllUsersProfilesController,
 } = require("../controllers/user.controller");
 
 const userRouter = Router();
 
-userRouter.get("/profile", getUserProfile);
-userRouter.get("/", getAllUsersProfiles);
-
+userRouter.get("/profile", getUserProfileController);
+userRouter.get("/", getAllUsersProfilesController);
 
 module.exports = userRouter;

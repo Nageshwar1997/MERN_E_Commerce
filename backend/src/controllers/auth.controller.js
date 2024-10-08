@@ -10,7 +10,7 @@ const { generateToken } = require("../providers/jwt.provider");
 const { createUser, getUserByEmail } = require("../services/user.service");
 const User = require("../models/user.model");
 
-const register = async (req, res) => {
+const registerController = async (req, res) => {
   try {
     const { firstName, lastName, email, password, mobileNumber } = req.body;
 
@@ -115,7 +115,7 @@ const register = async (req, res) => {
   }
 };
 
-const login = async (req, res) => {
+const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -190,6 +190,6 @@ const login = async (req, res) => {
 };
 
 module.exports = {
-  register,
-  login,
+  registerController,
+  loginController,
 };
