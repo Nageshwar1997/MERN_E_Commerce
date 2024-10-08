@@ -5,7 +5,7 @@ const {
 
 const updateCartItemController = async (req, res) => {
   try {
-    const { user } = req;
+    const { user } = await req;
     const { id } = req.params;
 
     const updatedCartItem = await updateCartItem(user._id, id, req.body);
@@ -35,8 +35,9 @@ const updateCartItemController = async (req, res) => {
 
 const removeCartItemController = async (req, res) => {
   try {
-    const { user } = req;
+    const { user } = await req;
     const { id } = req.params;
+    // console.log("user", user, "id", id);
 
     const removedCartItem = await removeCartItem(user._id, id);
 
@@ -55,6 +56,7 @@ const removeCartItemController = async (req, res) => {
       product: removedCartItem,
     });
   } catch (error) {
+    console.log("error", error.message);
     return res.status(500).json({
       success: false,
       error: true,

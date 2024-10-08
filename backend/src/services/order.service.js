@@ -23,7 +23,7 @@ const createOrder = async (user, shippingAddress) => {
     const cart = await findUserCart(user._id);
     const orderItems = [];
 
-    cart.orderItems.forEach((item) => {
+    for (const item of cart.cartItems) {
       const orderItem = new OrderItem({
         price: item.price,
         product: item.product,
@@ -33,10 +33,9 @@ const createOrder = async (user, shippingAddress) => {
         discountedPrice: item.discountedPrice,
       });
 
-      const createdOrderItem = orderItem.save();
-
+      const createdOrderItem = await orderItem.save();
       orderItems.push(createdOrderItem);
-    });
+    }
 
     const createdOrder = new Order({
       user,
@@ -55,7 +54,6 @@ const createOrder = async (user, shippingAddress) => {
   }
 };
 
-// it's for admin
 const placeOrder = async (orderId) => {
   try {
     const order = await findOrderById(orderId);

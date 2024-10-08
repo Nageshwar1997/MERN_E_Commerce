@@ -12,6 +12,8 @@ const createProduct = async (reqData) => {
         name: reqData.topLevelCategory,
         level: 1,
       });
+
+      await topLevel.save();
     }
 
     let secondLevel = await Category.findOne({
@@ -25,6 +27,8 @@ const createProduct = async (reqData) => {
         parentCategory: topLevel._id,
         level: 2,
       });
+
+      await secondLevel.save();
     }
 
     let thirdLevel = await Category.findOne({
@@ -38,6 +42,8 @@ const createProduct = async (reqData) => {
         parentCategory: secondLevel._id,
         level: 3,
       });
+
+      await thirdLevel.save();
     }
 
     const product = new Product({
@@ -49,7 +55,7 @@ const createProduct = async (reqData) => {
       imageUrl: reqData.imageUrl,
       brand: reqData.brand,
       price: reqData.price,
-      sizes: reqData.size,
+      sizes: reqData.sizes,
       quantity: reqData.quantity,
       category: thirdLevel._id,
     });
@@ -116,7 +122,7 @@ const getAllProducts = async (reqQuery) => {
     pageSize = pageSize || 10;
     pageNumber = pageNumber || 1;
 
-    let query = await Product.find({}).populate("category");
+    let query = Product.find();
 
     if (category) {
       const existCategory = await Category.findOne({ name: category });
@@ -176,6 +182,8 @@ const getAllProducts = async (reqQuery) => {
     const skip = (pageNumber - 1) * pageSize;
 
     query = query.skip(skip).limit(pageSize);
+
+    query = query.populate("category");
 
     const products = await query.exec();
 

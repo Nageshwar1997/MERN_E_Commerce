@@ -2,7 +2,7 @@ const { findUserCart, addCartItem } = require("../services/cart.service");
 
 const findUserCartController = async (req, res) => {
   try {
-    const { user } = req;
+    const { user } = await req;
     const cart = await findUserCart(user._id);
 
     if (!cart) {
@@ -30,7 +30,7 @@ const findUserCartController = async (req, res) => {
 
 const addItemToCartController = async (req, res) => {
   try {
-    const { user } = req;
+    const { user } = await req;
     const cartItem = await addCartItem(user._id, req.body);
 
     if (!cartItem) {

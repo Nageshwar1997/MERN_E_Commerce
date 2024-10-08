@@ -6,7 +6,7 @@ const {
 
 const createOrderController = async (req, res) => {
   try {
-    const { user } = req;
+    const { user } = await req;
     const createdOrder = await createOrder(user, req.body);
 
     return res.status(201).json({
@@ -54,7 +54,7 @@ const findOrderbyIdController = async (req, res) => {
 
 const orderHistoryController = async (req, res) => {
   try {
-    const { user } = req;
+    const { user } = await req;
     const orderHistory = await usersOrderHistory(user._id);
 
     if (!orderHistory) {

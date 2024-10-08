@@ -3,10 +3,9 @@ const { findUserById } = require("../services/user.service");
 
 const updateCartItem = async (userId, cartItemId, cartItemData) => {
   try {
+    console.log("userId, cartItemId, cartItemData", userId, cartItemId, cartItemData);
     const item = await findCartItemById(cartItemId);
-    if (!item) {
-      throw new Error("Cart item not found with given id", cartItemId);
-    }
+    // console.log("item", item);
 
     const user = await findUserById(userId);
     if (!user) {
@@ -29,29 +28,32 @@ const updateCartItem = async (userId, cartItemId, cartItemData) => {
   }
 };
 
+const findCartItemById = async (cartItemId) => {
+  try {
+    const cartItem = await CartItem.findById(cartItemId).populate("product");
+
+    return cartItem;
+  } catch (error) {
+    throw new Error(error.message || "Failed to find cart item");
+  }
+};
+
 const removeCartItem = async (userId, cartItemId) => {
   try {
     const cartItem = await findCartItemById(cartItemId);
     const user = await findUserById(userId);
+    console.log("user", user, "cartItemId", cartItemId);
 
     if (user._id.toString() === cartItem.userId.toString()) {
-      await CartItem.findByIdAndDelete(cartItemId);
-      return true;
+      const deletedCartItem = await CartItem.findByIdAndDelete(cartItemId);
+
+
+      return deletedCartItem;
     } else {
       throw new Error("User not authorized to remove cart item");
     }
   } catch (error) {
     throw new Error(error.message || "Failed to remove cart item");
-  }
-};
-
-const findCartItemById = async (cartItemId) => {
-  try {
-    const cartItem = await CartItem.findById(cartItemId);
-
-    return cartItem;
-  } catch (error) {
-    throw new Error(error.message || "Failed to find cart item");
   }
 };
 

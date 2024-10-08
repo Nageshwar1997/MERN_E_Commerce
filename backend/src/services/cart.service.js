@@ -73,6 +73,7 @@ const addCartItem = async (userId, reqData) => {
         userId,
         price: product.price,
         size: reqData.size,
+        discount: product.discountPercent,
         discountedPrice: product.discountedPrice,
       });
 

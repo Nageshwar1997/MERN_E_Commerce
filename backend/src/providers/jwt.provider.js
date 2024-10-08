@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const generateToken = async (userId) => {
   try {
-    const token = await jwt.sign({ userId }, process.env.JWT_SECRET_KEY, {
+    const token = jwt.sign({ userId }, process.env.JWT_SECRET_KEY, {
       expiresIn: "30d",
     });
     if (!token) {
@@ -16,7 +16,7 @@ const generateToken = async (userId) => {
 
 const getUserIdFromToken = async (token) => {
   try {
-    const decodedToken = await jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
     if (!decodedToken) {
       throw new Error("Failed to decode token");
     }
