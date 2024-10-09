@@ -10,7 +10,6 @@ import {
 // import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Avatar, Button, Menu, MenuItem } from "@mui/material";
 // import { navigation } from "../../../config/navigationMenu";
-// import AuthModal from "../Auth/AuthModal";
 // import { useDispatch, useSelector } from "react-redux";
 import { deepPurple } from "@mui/material/colors";
 // import { getUser, logout } from "../../../Redux/Auth/Action";
@@ -18,6 +17,7 @@ import { deepPurple } from "@mui/material/colors";
 // import TextField from "@mui/material/TextField";
 import { navigationData } from "./navigationData";
 import { useNavigate } from "react-router-dom";
+import AuthModal from "../../auth/AuthModal";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -31,15 +31,15 @@ export default function Navigation() {
   const [openAuthModal, setOpenAuthModal] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const openUserMenu = Boolean(anchorEl);
-  // const jwt = localStorage.getItem("jwt");
+  // const token = localStorage.getItem("token");
   // const location = useLocation();
 
   // useEffect(() => {
-  //   if (jwt) {
-  //     dispatch(getUser(jwt));
-  //     dispatch(getCart(jwt));
+  //   if (token) {
+  //     dispatch(getUser(token));
+  //     dispatch(getCart(token));
   //   }
-  // }, [jwt]);
+  // }, [token]);
 
   const handleUserClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -411,7 +411,7 @@ export default function Navigation() {
               <div className="ml-auto flex items-center">
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   {/* {auth.user ? ( */}
-                  {true ? (
+                  {false ? (
                     <div>
                       <Avatar
                         className="text-white"
@@ -506,7 +506,7 @@ export default function Navigation() {
           </div>
         </nav>
       </header>
-      {/* <AuthModal handleClose={handleClose} open={openAuthModal} /> */}
+      <AuthModal handleClose={handleClose} open={openAuthModal} />
     </div>
   );
 }

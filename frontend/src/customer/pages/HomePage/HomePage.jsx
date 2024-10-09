@@ -9,7 +9,7 @@ import { mens_shoes } from "../../../data/mens/shoes";
 const HomePage = () => {
   return (
     <div className="w-full">
-      <MainCarousel />
+      {/* <MainCarousel /> */}
       <div className="w-full space-y-10 py-20 flex flex-col justify-center px-5 lg:px-10">
         <HomeSectionCarousel data={mens_kurtas} sectionName={"Men's Kurtas"} />
         <HomeSectionCarousel data={mens_shoes} sectionName={"Men's Shoes"} />
