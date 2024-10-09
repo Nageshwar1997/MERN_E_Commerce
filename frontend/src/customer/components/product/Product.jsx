@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import {
   Dialog,
   DialogBackdrop,
@@ -20,6 +21,7 @@ import {
   PlusIcon,
   Squares2X2Icon,
 } from "@heroicons/react/20/solid";
+
 import { mens_kurtas } from "../../../data/mens/kurtas";
 import ProductCard from "./ProductCard";
 import { filters, singleFilter } from "../../../data/filters/filtersData";
@@ -32,6 +34,7 @@ import {
 } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import sortOptions from "../../../data/sort/sortData";
+import { findProducts } from "../../../state/product/action";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -39,11 +42,23 @@ function classNames(...classes) {
 
 export default function Product() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const location = useLocation();
+  const { search } = useLocation();
   const navigate = useNavigate();
+  const param = useParams();
+  const dispatch = useDispatch();
+
+  const decodeQueryString = decodeURIComponent(search);
+  const searchParams = new URLSearchParams(decodeQueryString);
+  const colorValue = searchParams.get("color");
+  const sizesValue = searchParams.get("size");
+  const priceValue = searchParams.get("price");
+  const discountValue = searchParams.get("discount");
+  const sortValue = searchParams.get("sort");
+  let pageNumberValue = searchParams.get("page");
+  const stockValue = searchParams.get("stock");
 
   const handleCheckboxFilterChange = (value, sectionId) => {
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(search);
     let filterValue = searchParams.getAll(sectionId);
 
     if (filterValue.length > 0 && filterValue[0].split(",").includes(value)) {
@@ -61,11 +76,39 @@ export default function Product() {
     navigate({ search: `?${query}` });
   };
   const handleRadioFilterChange = (e, sectionId) => {
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(search);
     searchParams.set(sectionId, e.target.value);
     const query = searchParams.toString();
     navigate({ search: `?${query}` });
   };
+
+  useEffect(() => {
+    const [minPrice, maxPrice] =
+      priceValue === null ? [0, 10000] : priceValue.split("-").map(Number);
+    const data = {
+      category: param.levelThree,
+      color: colorValue || [],
+      size: sizesValue || [],
+      minPrice: minPrice || 0,
+      maxPrice: maxPrice || 0,
+      minDiscount: discountValue || 0,
+      sort: sortValue || "price_low_to_high",
+      pageNumber: pageNumberValue || 1,
+      stock: stockValue || 0,
+      pageSize: 10,
+    };
+
+    dispatch(findProducts(data));
+  }, [
+    param.levelThree,
+    colorValue,
+    sizesValue,
+    priceValue,
+    discountValue,
+    sortValue,
+    pageNumberValue,
+    stockValue,
+  ]);
 
   return (
     <div className="bg-white">
@@ -191,6 +234,7 @@ export default function Product() {
                                 onChange={(e) =>
                                   handleRadioFilterChange(e, section.id)
                                 }
+                                key={option.value}
                                 value={option.value}
                                 control={<Radio />}
                                 label={option.label}
@@ -371,6 +415,7 @@ export default function Product() {
                                 onChange={(e) =>
                                   handleRadioFilterChange(e, section.id)
                                 }
+                                key={option.value}
                                 value={option.value}
                                 control={<Radio />}
                                 label={option.label}
@@ -387,8 +432,8 @@ export default function Product() {
               {/* Product grid */}
               <div className="lg:col-span-4 w-full">
                 <div className="flex flex-wrap justify-center bg-white py-5">
-                  {mens_kurtas.map((item) => (
-                    <ProductCard product={item} />
+                  {mens_kurtas.map((item, index) => (
+                    <ProductCard key={"productCard" + index} product={item} />
                   ))}
                 </div>
               </div>

@@ -26,7 +26,7 @@ export default function Navigation() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { auth } = useSelector((store) => store);
+  const auth = useSelector((state) => state.auth);
 
   const [openAuthModal, setOpenAuthModal] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -453,18 +453,13 @@ export default function Navigation() {
                           {/* {auth.user?.role === "ROLE_ADMIN" */}
                           {true ? "Admin Dashboard" : "My Orders"}
                         </MenuItem>
-                        <MenuItem
-                        onClick={handleLogout}
-                        >
-                          Logout
-                        </MenuItem>
+                        <MenuItem onClick={handleLogout}>Logout</MenuItem>
                       </Menu>
                     </div>
                   ) : (
                     <Button
                       onClick={handleOpen}
                       className="text-sm font-medium text-gray-700 hover:text-gray-800"
-
                     >
                       Signin
                     </Button>

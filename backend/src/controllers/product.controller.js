@@ -7,6 +7,33 @@ const {
   createMultipleProducts,
 } = require("../services/product.service");
 
+// const createProductController = async (req, res) => {
+//   try {
+//     const product = await createProduct(req.body);
+
+//     if (!product) {
+//       return res.status(400).json({
+//         success: false,
+//         error: true,
+//         message: "Failed to create product",
+//       });
+//     }
+
+//     return res.status(201).json({
+//       success: true,
+//       error: false,
+//       message: "Product created successfully",
+//       product,
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       error: true,
+//       message: error.message || "Failed to create product",
+//     });
+//   }
+// };
+
 const createProductController = async (req, res) => {
   try {
     const product = await createProduct(req.body);
