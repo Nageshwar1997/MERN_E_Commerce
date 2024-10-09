@@ -1,6 +1,2 @@
-"axios": "^1.4.0",
 "mdi-material-ui": "^7.7.0",
 "react-apexcharts": "^1.4.0",
-"react-redux": "^8.0.5",
-"redux": "^4.2.1",
-"redux-thunk": "^2.4.2",

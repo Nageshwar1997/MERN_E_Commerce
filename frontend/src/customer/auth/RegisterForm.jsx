@@ -1,9 +1,21 @@
-import { Button, Grid, TextField, Typography } from "@mui/material";
-import React from "react";
+import { Button, Grid, TextField } from "@mui/material";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { getUser, register } from "../../state/auth/action";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { auth } = useSelector((store) => store);
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (token) {
+      dispatch(getUser());
+    }
+  }, [token, auth.token]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -18,6 +30,13 @@ const RegisterForm = () => {
       password: data.get("password"),
       confirmPassword: data.get("confirmPassword"),
     };
+
+    if (userData.password !== userData.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    dispatch(register(userData));
 
     console.log("userData", userData);
   };
@@ -102,7 +121,11 @@ const RegisterForm = () => {
       <div className="flex justify-center flex-col items-center">
         <div className="flex items-center py-2">
           <p>Already have an account?</p>
-          <Button onClick={() => navigate("/login")} size="small" sx={{pt: 1}}>
+          <Button
+            onClick={() => navigate("/login")}
+            size="small"
+            sx={{ pt: 1 }}
+          >
             Login
           </Button>
         </div>

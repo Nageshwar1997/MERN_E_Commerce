@@ -97,6 +97,8 @@ const registerController = async (req, res) => {
       password,
     });
 
+    const token = await generateToken(user._id);
+
     await createCart(user);
 
     return res.status(201).json({
@@ -104,6 +106,7 @@ const registerController = async (req, res) => {
       error: false,
       message: "User created successfully",
       user,
+      token,
     });
   } catch (error) {
     console.error("Error during user registration:", error);
