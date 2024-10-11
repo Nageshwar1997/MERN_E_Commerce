@@ -1,8 +1,13 @@
 import { Box, Button, Grid, TextField } from "@mui/material";
 import React from "react";
 import AddressCard from "../addressCard/AddressCard";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { createOrder } from "../../../state/order/action";
 
 const DeliveryAddressForm = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handelSubmit = (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -14,15 +19,21 @@ const DeliveryAddressForm = () => {
       state: data.get("state"),
       zip: data.get("zip"),
       country: data.get("country"),
-      phoneNumber: data.get("phoneNumber"),
-      alternativePhoneNumber: data.get("alternativePhoneNumber"),
+      mobileNumber: data.get("mobileNumber"),
+      alternateMobileNumber: data.get("alternateMobileNumber"),
     };
+    const orderData = {
+      address,
+      navigate,
+    };
+    dispatch(createOrder(orderData));
     console.log("address", address);
   };
   return (
     <div>
       <Grid container spacing={4}>
         <Grid
+          item
           xs={12}
           lg={5}
           className="border rounded-e-md shadow-md h-[30.5rem] overflow-y-scroll"
@@ -117,9 +128,9 @@ const DeliveryAddressForm = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     required
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    label="Phone Number"
+                    id="mobileNumber"
+                    name="mobileNumber"
+                    label="Mobile Number"
                     fullWidth
                     autoComplete="given-name"
                   />
@@ -127,9 +138,9 @@ const DeliveryAddressForm = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     required
-                    id="alternatePhoneNumber"
-                    name="alternatePhoneNumber"
-                    label="Alternative Phone Number"
+                    id="alternateMobileNumber"
+                    name="alternateMobileNumber"
+                    label="Alternate Mobile Number"
                     fullWidth
                     autoComplete="given-name"
                   />

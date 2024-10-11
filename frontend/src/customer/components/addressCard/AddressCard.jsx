@@ -1,25 +1,24 @@
-import React from 'react'
+import React from "react";
 
-const AddressCard = () => {
+const AddressCard = ({ address }) => {
   return (
+    <div>
       <div>
-          <div>
-              <p>Nageshwar Pawar</p>
-              <p>Amdura, Nanded, Maharashtra, 431806</p>
-              <div className='space-y-1'>
-                  <p>
-                      Phone Number:
-                  </p>
-                  <p>
-                      +91 9503198637
-                  </p>
-                  <p>
-                      +91 9503198637
-                  </p>
-              </div>
-          </div>
+        <p className="capitalize">
+          {address?.firstName} {address?.lastName}
+        </p>
+        <p className="capitalize">
+          {address?.address}, {address?.city}, {address?.state},{" "}
+          {address?.country}, {address?.zip}
+        </p>
+        <div className="space-y-1">
+          <p>Phone Number:</p>
+          <p>{address?.mobileNumber}</p>
+          <p>{address?.alternateMobileNumber}</p>
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default AddressCard
+export default AddressCard;
