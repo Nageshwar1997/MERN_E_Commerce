@@ -37,7 +37,7 @@ const removeCartItemController = async (req, res) => {
   try {
     const { user } = await req;
     const { id } = req.params;
-    // console.log("user", user, "id", id);
+    console.log("user", user, "id", id);
 
     const removedCartItem = await removeCartItem(user._id, id);
 

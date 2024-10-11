@@ -13,7 +13,7 @@ import { deepPurple } from "@mui/material/colors";
 // import { getCart } from "../../../Redux/Customers/Cart/Action";
 // import TextField from "@mui/material/TextField";
 import { navigationData } from "./navigationData";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import AuthModal from "../../auth/AuthModal";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, logout } from "../../../state/auth/action";
@@ -56,7 +56,7 @@ export default function Navigation() {
   };
 
   const handleCategoryClick = (category, section, item, close) => {
-    navigate(`/${category.id}/${section.id}/${item.id}`);
+    navigate(`/${category._id}/${section._id}/${item._id}`);
     close();
   };
 
@@ -178,7 +178,7 @@ export default function Navigation() {
                         {category.sections.map((section) => (
                           <div key={section.name}>
                             <p
-                              id={`${category.id}-${section.id}-heading-mobile`}
+                              id={`${category._id}-${section._id}-heading-mobile`}
                               className="font-medium text-gray-900"
                             >
                               {section.name}
@@ -186,7 +186,7 @@ export default function Navigation() {
                             {/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
                             <ul
                               role="list"
-                              aria-labelledby={`${category.id}-${section.id}-heading-mobile`}
+                              aria-labelledby={`${category._id}-${section._id}-heading-mobile`}
                               className="mt-6 flex flex-col space-y-6"
                             >
                               {section.items.map((item) => (
@@ -266,14 +266,14 @@ export default function Navigation() {
 
               {/* Logo */}
               <div className="ml-4 flex lg:ml-0">
-                {/* <Link to="/"> */}
+                <Link to="/">
                 <span className="sr-only">Your Company</span>
                 <img
                   src="https://cdn.cookielaw.org/logos/6e0ffeab-df84-4fee-b293-9e6498bfa887/697b276d-c669-4d88-b115-dd9e6cae3fae/28a9d5ed-4776-4fe0-9e19-007e8ed817a9/709px-H&M-Logo.svg.png"
                   alt="Logo"
                   className="h-8 w-10 mr-2 cursor-pointer"
                 />
-                {/* </Link> */}
+                </Link>
               </div>
 
               {/* Flyout menus */}

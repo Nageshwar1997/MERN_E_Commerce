@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Dialog,
   DialogBackdrop,
@@ -29,6 +29,7 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  Pagination,
   Radio,
   RadioGroup,
 } from "@mui/material";
@@ -46,16 +47,17 @@ export default function Product() {
   const navigate = useNavigate();
   const param = useParams();
   const dispatch = useDispatch();
+  const products = useSelector((store) => store?.products?.products?.products);
 
   const decodeQueryString = decodeURIComponent(search);
   const searchParams = new URLSearchParams(decodeQueryString);
   const colorValue = searchParams.get("color");
-  const sizesValue = searchParams.get("size");
+  const sizesValue = searchParams.get("sizes");
   const priceValue = searchParams.get("price");
-  const discountValue = searchParams.get("discount");
   const sortValue = searchParams.get("sort");
-  let pageNumberValue = searchParams.get("page");
   const stockValue = searchParams.get("stock");
+  const discountValue = searchParams.get("discount");
+  let pageNumberValue = searchParams.get("page");
 
   const handleCheckboxFilterChange = (value, sectionId) => {
     const searchParams = new URLSearchParams(search);
@@ -82,13 +84,22 @@ export default function Product() {
     navigate({ search: `?${query}` });
   };
 
+  const handlePaginationChange = (e, value) => {
+    e.preventDefault();
+    const searchParams = new URLSearchParams(search);
+    searchParams.set("page", value);
+
+    const query = searchParams.toString();
+    navigate({ search: `?${query}` });
+  };
+
   useEffect(() => {
     const [minPrice, maxPrice] =
       priceValue === null ? [0, 10000] : priceValue.split("-").map(Number);
     const data = {
       category: param.levelThree,
       color: colorValue || [],
-      size: sizesValue || [],
+      sizes: sizesValue || [],
       minPrice: minPrice || 0,
       maxPrice: maxPrice || 0,
       minDiscount: discountValue || 0,
@@ -145,7 +156,7 @@ export default function Product() {
               <form className="mt-4 border-t border-gray-200">
                 {filters.map((section) => (
                   <Disclosure
-                    key={section.id}
+                    key={section._id}
                     as="div"
                     className="border-t border-gray-200 px-4 py-6"
                   >
@@ -174,18 +185,18 @@ export default function Product() {
                               onChange={() =>
                                 handleCheckboxFilterChange(
                                   option.value,
-                                  section.id
+                                  section._id
                                 )
                               }
                               defaultValue={option.value}
                               defaultChecked={option.checked}
-                              id={`filter-mobile-${section.id}-${optionIdx}`}
-                              name={`${section.id}[]`}
+                              id={`filter-mobile-${section._id}-${optionIdx}`}
+                              name={`${section._id}[]`}
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             />
                             <label
-                              htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
+                              htmlFor={`filter-mobile-${section._id}-${optionIdx}`}
                               className="ml-3 min-w-0 flex-1 text-gray-500"
                             >
                               {option.label}
@@ -198,7 +209,7 @@ export default function Product() {
                 ))}
                 {singleFilter.map((section) => (
                   <Disclosure
-                    key={section.id}
+                    key={section._id}
                     as="div"
                     className="border-t border-gray-200 px-4 py-6"
                   >
@@ -232,7 +243,7 @@ export default function Product() {
                             {section.options.map((option, optionIdx) => (
                               <FormControlLabel
                                 onChange={(e) =>
-                                  handleRadioFilterChange(e, section.id)
+                                  handleRadioFilterChange(e, section._id)
                                 }
                                 key={option.value}
                                 value={option.value}
@@ -326,7 +337,7 @@ export default function Product() {
                 </div>
                 {filters.map((section) => (
                   <Disclosure
-                    key={section.id}
+                    key={section._id}
                     as="div"
                     className="border-b border-gray-200 py-6"
                   >
@@ -355,18 +366,18 @@ export default function Product() {
                               onChange={() =>
                                 handleCheckboxFilterChange(
                                   option.value,
-                                  section.id
+                                  section._id
                                 )
                               }
                               defaultValue={option.value}
                               defaultChecked={option.checked}
-                              id={`filter-${section.id}-${optionIdx}`}
-                              name={`${section.id}[]`}
+                              id={`filter-${section._id}-${optionIdx}`}
+                              name={`${section._id}[]`}
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             />
                             <label
-                              htmlFor={`filter-${section.id}-${optionIdx}`}
+                              htmlFor={`filter-${section._id}-${optionIdx}`}
                               className="ml-3 text-sm text-gray-600"
                             >
                               {option.label}
@@ -379,7 +390,7 @@ export default function Product() {
                 ))}
                 {singleFilter.map((section) => (
                   <Disclosure
-                    key={section.id}
+                    key={section._id}
                     as="div"
                     className="border-b border-gray-200 py-6"
                   >
@@ -413,7 +424,7 @@ export default function Product() {
                             {section.options.map((option, optionIdx) => (
                               <FormControlLabel
                                 onChange={(e) =>
-                                  handleRadioFilterChange(e, section.id)
+                                  handleRadioFilterChange(e, section._id)
                                 }
                                 key={option.value}
                                 value={option.value}
@@ -432,11 +443,21 @@ export default function Product() {
               {/* Product grid */}
               <div className="lg:col-span-4 w-full">
                 <div className="flex flex-wrap justify-center bg-white py-5">
-                  {mens_kurtas.map((item, index) => (
-                    <ProductCard key={"productCard" + index} product={item} />
-                  ))}
+                  {products?.content &&
+                    products?.content?.map((item, index) => (
+                      <ProductCard key={"productCard" + index} product={item} />
+                    ))}
                 </div>
               </div>
+            </div>
+          </section>
+          <section>
+            <div className="px-4 py-5 flex justify-center">
+              <Pagination
+                count={products?.totalPages}
+                onChange={handlePaginationChange}
+                color="secondary"
+              />
             </div>
           </section>
         </main>

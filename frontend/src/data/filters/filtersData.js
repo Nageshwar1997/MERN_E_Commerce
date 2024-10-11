@@ -11,7 +11,7 @@ const colors = [
 
 const filters = [
   {
-    id: "color",
+    _id: "color",
     name: "Color",
     options: [
       {
@@ -61,20 +61,32 @@ const filters = [
     ],
   },
   {
-    id: "size",
+    _id: "sizes",
     name: "Size",
     options: [
       {
-        value: "s",
+        value: "S",
         label: "S",
       },
       {
-        value: "m",
+        value: "M",
         label: "M",
       },
       {
-        value: "l",
+        value: "L",
         label: "L",
+      },
+      {
+        value: "XL",
+        label: "XL",
+      },
+      {
+        value: "XXL",
+        label: "XXL",
+      },
+      {
+        value: "XXXL",
+        label: "XXXL",
       },
     ],
   },
@@ -82,7 +94,7 @@ const filters = [
 
 const singleFilter = [
   {
-    id: "price",
+    _id: "price",
     name: "Price",
     options: [
       {
@@ -108,7 +120,7 @@ const singleFilter = [
     ],
   },
   {
-    id: "discount",
+    _id: "discount",
     name: "Discount Range",
     options: [
       {
@@ -146,7 +158,7 @@ const singleFilter = [
     ],
   },
   {
-    id: "stock",
+    _id: "stock",
     name: "Availability",
     options: [
       {
@@ -161,5 +173,4 @@ const singleFilter = [
   },
 ];
 
-
-export { colors, filters, singleFilter }
+export { colors, filters, singleFilter };

@@ -11,8 +11,9 @@ import { orderReducer } from "./order/reducer";
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  product: customerProductReducer,
+  products: customerProductReducer,
   cart: cartReducer,
   order: orderReducer,
 });
+
 export const store = createStore(rootReducer, applyMiddleware(thunk));

@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Radio, RadioGroup } from "@headlessui/react";
 import { Box, Button, Grid, LinearProgress, Rating } from "@mui/material";
 import ProductReviewCard from "./ProductReviewCard";
 import { mens_kurtas } from "../../../data/mens/kurtas";
 import HomeSectionCarouselCard from "../homeSectionCarouselCard/HomeSectionCarouselCard";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { findProductById } from "../../../state/product/action";
+import { addItemToCart } from "../../../state/cart/action";
 
-const product = {
+const dummyProduct = {
   name: "Basic Tee 6-Pack",
   price: "$192",
   href: "#",
@@ -58,7 +61,6 @@ const product = {
   details:
     'The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming "Charcoal Gray" limited release.',
 };
-// const reviews = { href: "#", average: 4, totalCount: 117 };
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -66,17 +68,31 @@ function classNames(...classes) {
 
 export default function ProductDetails() {
   const navigate = useNavigate();
-  const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
+  const params = useParams();
+  const dispatch = useDispatch();
+  const { pathname } = useLocation();
+  const product = useSelector((store) => store.products?.product?.product);
+  console.log("product", product);
 
+  const [selectedSize, setSelectedSize] = useState(product?.sizes[0]?.name || "S");
+
+  console.log("selectedSize", selectedSize);
   const handleAddToCart = () => {
+    const data = { productId: params.productId, size: selectedSize };
+    dispatch(addItemToCart(data));
     navigate("/cart");
-  }
+  };
+
+  useEffect(() => {
+    dispatch(findProductById(params.productId));
+  }, [params.productId]);
+
   return (
     <div className="bg-white lg:px-20">
       <div className="pt-6">
         <nav aria-label="Breadcrumb">
           <ol className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-            {product.breadcrumbs.map((breadcrumb) => (
+            {dummyProduct.breadcrumbs.map((breadcrumb) => (
               <li key={breadcrumb.id}>
                 <div className="flex items-center">
                   <a
@@ -100,11 +116,11 @@ export default function ProductDetails() {
             ))}
             <li className="text-sm">
               <a
-                href={product.href}
+                href={pathname}
                 aria-current="page"
                 className="font-medium text-gray-500 hover:text-gray-600 transition duration-200"
               >
-                {product.name}
+                {product?.title}
               </a>
             </li>
           </ol>
@@ -115,20 +131,20 @@ export default function ProductDetails() {
           <div className="flex flex-col items-center">
             <div className="overflow-hidden rounded-lg max-w-[30rem] max-h-[35rem] shadow-lg transition-transform transform hover:scale-105">
               <img
-                alt={product.images[0].alt}
-                src={product.images[0].src}
+                alt={product?.title}
+                src={product?.imageUrl}
                 className="h-full w-full object-cover object-center"
               />
             </div>
             <div className="flex flex-wrap space-x-5 justify-center mt-4">
-              {product.images.map((image) => (
+              {new Array(5).fill(product?.imageUrl).map((imgUrl, i) => (
                 <div
-                  key={image.src}
+                  key={i}
                   className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg max-w-[5rem] max-h-[5rem] shadow-sm transition-transform transform hover:scale-105"
                 >
                   <img
-                    alt={image.alt}
-                    src={image.src}
+                    alt={"image.alt"}
+                    src={imgUrl}
                     className="h-full w-full object-cover object-center"
                   />
                 </div>
@@ -138,11 +154,11 @@ export default function ProductDetails() {
           {/* Product info */}
           <div className="lg:col-span-1 mx-auto max-w-2xl px-4 pb-16 sm:px-6 lg:max-w-7xl lg:px-8 lg:pb-24">
             <div className="lg:col-span-2">
-              <h1 className="text-lg lg:text-xl font-semibold text-gray-900">
-                My Brand
+              <h1 className="text-lg lg:text-xl font-semibold uppercase text-gray-900">
+                {product?.brand}
               </h1>
-              <h2 className="text-lg lg:text-xl text-gray-900 opacity-60 pt-1">
-                {product.name}
+              <h2 className="text-lg lg:text-xl text-gray-900 opacity-60 pt-1 capitalize">
+                {product?.title}
               </h2>
             </div>
 
@@ -150,9 +166,13 @@ export default function ProductDetails() {
             <div className="mt-4 lg:row-span-3 lg:mt-0">
               <h2 className="sr-only">Product information</h2>
               <div className="flex space-x-5 items-center text-lg lg:text-xl text-gray-900 mt-6">
-                <p className="font-semibold">Rs. 199</p>
-                <p className="font-semibold line-through opacity-50">Rs. 299</p>
-                <p className="text-green-600 font-semibold">50% OFF</p>
+                <p className="font-semibold">₹{product?.discountedPrice}</p>
+                <p className="font-semibold line-through opacity-50">
+                  ₹{product?.price}
+                </p>
+                <p className="text-green-600 font-semibold">
+                  {product?.discountPercent}% OFF
+                </p>
               </div>
 
               {/* Reviews */}
@@ -169,60 +189,66 @@ export default function ProductDetails() {
               <form className="mt-10">
                 {/* Sizes */}
                 <div className="mt-10">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-medium text-gray-900">Size</h3>
-                  </div>
+  <div className="flex items-center justify-between">
+    <h3 className="text-sm font-medium text-gray-900">Size</h3>
+  </div>
 
-                  <fieldset aria-label="Choose a size" className="mt-4">
-                    <RadioGroup
-                      value={selectedSize}
-                      onChange={setSelectedSize}
-                      className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4"
-                    >
-                      {product.sizes.map((size) => (
-                        <Radio
-                          key={size.name}
-                          value={size}
-                          disabled={!size.inStock}
-                          className={classNames(
-                            size.inStock
-                              ? "cursor-pointer bg-white text-gray-900 shadow-sm hover:bg-gray-50 transition duration-200"
-                              : "cursor-not-allowed bg-gray-50 text-gray-200",
-                            "group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium uppercase focus:outline-none data-[focus]:ring-2 data-[focus]:ring-indigo-500 sm:flex-1 sm:py-6"
-                          )}
-                        >
-                          <span>{size.name}</span>
-                          {size.inStock ? (
-                            <span
-                              aria-hidden="true"
-                              className="pointer-events-none absolute -inset-px rounded-md border-2 border-transparent group-data-[focus]:border group-data-[checked]:border-indigo-500 border-gray-400"
-                            />
-                          ) : (
-                            <span
-                              aria-hidden="true"
-                              className="pointer-events-none absolute -inset-px rounded-md border-2 border-gray-400"
-                            >
-                              <svg
-                                stroke="currentColor"
-                                viewBox="0 0 100 100"
-                                preserveAspectRatio="none"
-                                className="absolute inset-0 h-full w-full stroke-2 text-gray-400"
-                              >
-                                <line
-                                  x1={0}
-                                  x2={100}
-                                  y1={100}
-                                  y2={0}
-                                  vectorEffect="non-scaling-stroke"
-                                />
-                              </svg>
-                            </span>
-                          )}
-                        </Radio>
-                      ))}
-                    </RadioGroup>
-                  </fieldset>
-                </div>
+  <fieldset aria-label="Choose a size" className="mt-4">
+    <RadioGroup
+      value={selectedSize}
+      onChange={setSelectedSize} // No need for e.target.value, directly update state
+      className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4"
+    >
+      {product?.sizes?.map((size) => (
+        <RadioGroup.Option
+          key={size.name}
+          value={size.name}
+          disabled={!size.quantity}
+          className={({ active, checked }) =>
+            classNames(
+              size.quantity > 0
+                ? "cursor-pointer bg-white text-gray-900 shadow-sm hover:bg-gray-50 transition duration-200"
+                : "cursor-not-allowed bg-gray-50 text-gray-200",
+              active ? "ring-2 ring-indigo-500" : "",
+              checked ? "border-indigo-500" : "border-gray-400",
+              "group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium uppercase focus:outline-none sm:flex-1 sm:py-6"
+            )
+          }
+        >
+          <span>{size.name}</span>
+
+          {size.quantity > 0 ? (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -inset-px rounded-md border-2 border-transparent group-focus:border-indigo-500 group-checked:border-indigo-500"
+            />
+          ) : (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -inset-px rounded-md border-2 border-gray-400"
+            >
+              <svg
+                stroke="currentColor"
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
+                className="absolute inset-0 h-full w-full stroke-2 text-gray-400"
+              >
+                <line
+                  x1={0}
+                  x2={100}
+                  y1={100}
+                  y2={0}
+                  vectorEffect="non-scaling-stroke"
+                />
+              </svg>
+            </span>
+          )}
+        </RadioGroup.Option>
+      ))}
+    </RadioGroup>
+  </fieldset>
+</div>
+
 
                 <Button
                   onClick={handleAddToCart}
@@ -247,7 +273,7 @@ export default function ProductDetails() {
                 <h3 className="sr-only">Description</h3>
                 <div className="space-y-6">
                   <p className="text-base text-gray-900">
-                    {product.description}
+                    {product?.description}
                   </p>
                 </div>
               </div>
@@ -258,7 +284,7 @@ export default function ProductDetails() {
                 </h3>
                 <div className="mt-4">
                   <ul className="list-disc space-y-2 pl-4 text-sm">
-                    {product.highlights.map((highlight) => (
+                    {dummyProduct.highlights.map((highlight) => (
                       <li key={highlight} className="text-gray-400">
                         <span className="text-gray-600">{highlight}</span>
                       </li>
@@ -270,7 +296,9 @@ export default function ProductDetails() {
               <div className="mt-10">
                 <h2 className="text-sm font-medium text-gray-900">Details</h2>
                 <div className="mt-4 space-y-6">
-                  <p className="text-sm text-gray-600">{product.details}</p>
+                  <p className="text-sm text-gray-600">
+                    {dummyProduct.details}
+                  </p>
                 </div>
               </div>
             </div>
@@ -390,8 +418,8 @@ export default function ProductDetails() {
             Similar Products:
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {mens_kurtas.slice(0, 20).map((item) => (
-              <HomeSectionCarouselCard key={item.id} product={item} />
+            {mens_kurtas.slice(0, 20).map((item, index) => (
+              <HomeSectionCarouselCard key={index} product={item} />
             ))}
           </div>
         </section>
