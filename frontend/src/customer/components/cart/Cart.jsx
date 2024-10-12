@@ -10,16 +10,12 @@ const Cart = () => {
   const dispatch = useDispatch();
 
   const cart = useSelector((store) => store?.cart?.cart?.cart);
-  const carts = useSelector((store) => store);
-  console.log("carts",carts)
   const store = useSelector((store) => store);
   const cartItems = useMemo(
     () => store?.cart?.cart?.cart?.cartItems,
     [store?.cart?.cart?.cart?.cartItems]
   );
 
-  console.log("cartItems", cartItems);
-  console.log("cart from cart", cart);
   const handleCheckout = () => {
     navigate("/checkout?step=2");
   };

@@ -4,16 +4,35 @@ const {
   usersOrderHistory,
 } = require("../services/order.service");
 
+// const createOrderController = async (req, res) => {
+//   try {
+//     const { user } = await req;
+//     const createdOrder = await createOrder(user, req.body);
+
+//     return res.status(201).json({
+//       success: true,
+//       error: false,
+//       message: "Order created successfully",
+//       order: createdOrder,
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       error: true,
+//       message: error.message || "Failed to create order",
+//     });
+//   }
+// };
 const createOrderController = async (req, res) => {
   try {
-    const { user } = await req;
+    const { user } = req;
     const createdOrder = await createOrder(user, req.body);
 
     return res.status(201).json({
       success: true,
       error: false,
       message: "Order created successfully",
-      order: createdOrder,
+      order: createdOrder, // The circular references have been sanitized here
     });
   } catch (error) {
     return res.status(500).json({

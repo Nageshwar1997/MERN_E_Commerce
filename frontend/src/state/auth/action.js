@@ -41,7 +41,7 @@ export const register = (userData) => async (dispatch) => {
       localStorage.setItem("token", user.token);
     }
 
-    console.log("user", user);
+    // console.log("user", user);
 
     dispatch(registerSuccess(user.token));
   } catch (error) {
@@ -73,7 +73,7 @@ export const login = (userData) => async (dispatch) => {
 
     const user = response.data;
 
-    console.log("user", user);
+    // console.log("user", user);
 
     if (user.token) {
       localStorage.setItem("token", user.token);
@@ -111,7 +111,7 @@ export const getUser = () => async (dispatch) => {
 
     const user = response.data;
 
-    console.log("user", user);
+    // console.log("user", user);
 
     dispatch(getUserSuccess(user.user));
   } catch (error) {

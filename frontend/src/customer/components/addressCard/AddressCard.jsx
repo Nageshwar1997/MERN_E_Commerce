@@ -2,7 +2,7 @@ import React from "react";
 
 const AddressCard = ({ address }) => {
   return (
-    <div>
+    <div className="border py-2 px-4 mb-2">
       <div>
         <p className="capitalize">
           {address?.firstName} {address?.lastName}
@@ -13,8 +13,8 @@ const AddressCard = ({ address }) => {
         </p>
         <div className="space-y-1">
           <p>Phone Number:</p>
-          <p>{address?.mobileNumber}</p>
-          <p>{address?.alternateMobileNumber}</p>
+          <p>+91 {address?.mobileNumber?.slice(3, 13)}</p>
+          <p>+91 {address?.alternateMobileNumber?.slice(3, 13)}</p>
         </div>
       </div>
     </div>

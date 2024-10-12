@@ -12,6 +12,7 @@ const orderRouter = require("./routes/order.routes");
 const reviewRouter = require("./routes/review.routes");
 const ratingRouter = require("./routes/rating.routes");
 const adminOrderRouter = require("./routes/adminOrder.routes");
+const paymentRouter = require("./routes/payment.routes");
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ app.get("/", (req, res) => {
   });
 });
 
+
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 
@@ -46,6 +48,8 @@ app.use("/api/reviews", reviewRouter);
 app.use("/api/ratings", ratingRouter);
 app.use("/api/admin/orders", adminOrderRouter);
 
+app.use("/api/payments", paymentRouter)
+
 app.use((_, res) => {
   res.status(404).json({
     success: false,
@@ -55,3 +59,4 @@ app.use((_, res) => {
 });
 
 module.exports = app;
+

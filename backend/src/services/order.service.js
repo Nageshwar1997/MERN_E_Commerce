@@ -3,13 +3,62 @@ const Order = require("../models/order.model");
 const OrderItem = require("../models/orderItems");
 const { findUserCart } = require("./cart.service");
 
+// const createOrder = async (user, shippingAddress) => {
+//   try {
+//     let address;
+
+//     if (shippingAddress._id) {
+//       let existAddress = await Address.findById(shippingAddress._id);
+
+//       address = existAddress;
+//     } else {
+//       address = new Address(shippingAddress);
+//       address.user = user;
+//       await address.save();
+
+//       user.addresses.push(address);
+//       await user.save();
+//     }
+
+//     const cart = await findUserCart(user._id);
+//     const orderItems = [];
+
+//     for (const item of cart.cartItems) {
+//       const orderItem = new OrderItem({
+//         price: item.price,
+//         product: item.product,
+//         quantity: item.quantity,
+//         size: item.size,
+//         userId: item.userId,
+//         discountedPrice: item.discountedPrice,
+//       });
+
+//       const createdOrderItem = await orderItem.save();
+//       orderItems.push(createdOrderItem);
+//     }
+
+//     const createdOrder = new Order({
+//       user,
+//       orderItems,
+//       totalPrice: cart.totalPrice,
+//       totalDiscountedPrice: cart.totalDiscountedPrice,
+//       totalDiscount: cart.totalDiscount,
+//       totalItems: cart.totalItems,
+//       shippingAddress: address,
+//     });
+
+//     const savedOrder = createdOrder.save();
+//     return savedOrder;
+//   } catch (error) {
+//     throw new Error(error.message || "Failed to create order");
+//   }
+// };
 const createOrder = async (user, shippingAddress) => {
   try {
     let address;
 
     if (shippingAddress._id) {
       let existAddress = await Address.findById(shippingAddress._id);
-
       address = existAddress;
     } else {
       address = new Address(shippingAddress);
@@ -38,7 +87,7 @@ const createOrder = async (user, shippingAddress) => {
     }
 
     const createdOrder = new Order({
-      user,
+      user, // This may cause circular structure
       orderItems,
       totalPrice: cart.totalPrice,
       totalDiscountedPrice: cart.totalDiscountedPrice,
@@ -47,8 +96,13 @@ const createOrder = async (user, shippingAddress) => {
       shippingAddress: address,
     });
 
-    const savedOrder = createdOrder.save();
-    return savedOrder;
+    const savedOrder = await createdOrder.save();
+
+    // Sanitize the saved order before returning
+    const sanitizedOrder = savedOrder.toObject();
+    delete sanitizedOrder.user.addresses; // Avoid circular reference
+
+    return sanitizedOrder;
   } catch (error) {
     throw new Error(error.message || "Failed to create order");
   }
@@ -149,7 +203,7 @@ const findOrderById = async (orderId) => {
     const order = await Order.findById(orderId)
       .populate("user")
       .populate({ path: "orderItems", populate: { path: "product" } })
-      .populate("shippingAddress");
+      .populate("shippingAddress").lean();
 
     if (!order) {
       throw new Error(`Order not found with id ${orderId}`);

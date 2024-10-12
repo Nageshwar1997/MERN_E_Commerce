@@ -9,9 +9,12 @@ import {
 } from "./actionType";
 
 export const createOrder = (reqData) => async (dispatch) => {
+  console.log("reqData", reqData);
   dispatch({ type: CREATE_ORDER_REQUEST });
   try {
     const { data } = await api.post(`/api/orders`, reqData.address);
+
+    console.log("data",data)
 
     if (data?.order._id) {
       reqData.navigate({ search: `step=3&order_id=${data?.order._id}` });
@@ -32,7 +35,7 @@ export const getOrderById = (orderId) => async (dispatch) => {
 
     dispatch({ type: GET_ORDER_BY_ID_SUCCESS, payload: data });
 
-    console.log("Fetched Order:", data);
+    // console.log("Fetched Order:", data);
   } catch (error) {
     console.error("Error fetching order:", error);
     dispatch({ type: GET_ORDER_BY_ID_FAILURE, payload: error.message });
