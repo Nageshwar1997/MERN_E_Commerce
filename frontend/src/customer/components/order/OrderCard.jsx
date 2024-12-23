@@ -7,7 +7,7 @@ const OrderCard = () => {
   const navigate = useNavigate();
   return (
     <div
-      // onClick={() => navigate(`/account/order/${5}`)}
+      onClick={() => navigate(`/account/order/${5}`)}
       className="p-5 shadow-lg border rounded-md hover:shadow-slate-200 hover:shadow-xl"
     >
       <Grid container spacing={2} sx={{ justifyContent: "space-between" }}>

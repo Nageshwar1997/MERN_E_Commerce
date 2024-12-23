@@ -30,6 +30,7 @@ const OrderDetails = () => {
       <Grid container className="space-y-5">
         {Array.from({ length: 5 }).map((_, index) => (
           <Grid
+            key={index}
             item
             container
             className="shadow-xl rounded-md p-5 border"
