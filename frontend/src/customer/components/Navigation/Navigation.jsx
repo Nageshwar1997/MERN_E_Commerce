@@ -13,7 +13,7 @@ import { deepPurple } from "@mui/material/colors";
 // import { getCart } from "../../../Redux/Customers/Cart/Action";
 // import TextField from "@mui/material/TextField";
 import { navigationData } from "./navigationData";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 // import AuthModal from "../../auth/AuthModal";
 // import { useDispatch, useSelector } from "react-redux";
 // import { getUser, logout } from "../../../state/auth/action";
@@ -24,15 +24,15 @@ function classNames(...classes) {
 
 export default function Navigation() {
   const [open, setOpen] = useState(false);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   // const dispatch = useDispatch();
   // const auth = useSelector((state) => state.auth);
 
   const [openAuthModal, setOpenAuthModal] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const openUserMenu = Boolean(anchorEl);
-  // const token = localStorage.getItem("token");
-  // const { pathname } = useLocation();
+  const token = localStorage.getItem("token");
+  const { pathname } = useLocation();
 
   // useEffect(() => {
   //   if (token) {
@@ -40,25 +40,25 @@ export default function Navigation() {
   //   }
   // }, [token]);
 
-  // const handleUserClick = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-  // const handleCloseUserMenu = (event) => {
-  //   setAnchorEl(null);
-  // };
+  const handleUserClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseUserMenu = (event) => {
+    setAnchorEl(null);
+  };
 
-  // const handleOpen = () => {
-  //   // navigate("/login");
-  //   setOpenAuthModal(true);
-  // };
-  // const handleClose = () => {
-  //   setOpenAuthModal(false);
-  // };
+  const handleOpen = () => {
+    navigate("/login");
+    setOpenAuthModal(true);
+  };
+  const handleClose = () => {
+    setOpenAuthModal(false);
+  };
 
-  // const handleCategoryClick = (category, section, item, close) => {
-  //   // navigate(`/${category._id}/${section._id}/${item._id}`);
-  //   close();
-  // };
+  const handleCategoryClick = (category, section, item, close) => {
+    navigate(`/${category.id}/${section.id}/${item.id}`);
+    close();
+  };
 
   // useEffect(() => {
   //   if (auth.user) {
@@ -69,16 +69,16 @@ export default function Navigation() {
   //   }
   // }, [auth.user]);
 
-  // const handleLogout = () => {
-  //   handleCloseUserMenu();
-  //   // dispatch(logout());
-  // };
-  // const handleMyOrderClick = () => {
-  //   handleCloseUserMenu();
-  //   // auth.user?.role === "ADMIN"
-  //   //   ? navigate("/admin")
-  //   //   : navigate("/account/order");
-  // };
+  const handleLogout = () => {
+    handleCloseUserMenu();
+    // dispatch(logout());
+  };
+  const handleMyOrderClick = () => {
+    handleCloseUserMenu();
+    //   // auth.user?.role === "ADMIN"
+    //   //   ? navigate("/admin")
+    //   //   : navigate("/account/order");
+  };
 
   return (
     <div className="bg-white pb-10">
@@ -178,7 +178,7 @@ export default function Navigation() {
                         {category.sections.map((section) => (
                           <div key={section.name}>
                             <p
-                              id={`${category._id}-${section._id}-heading-mobile`}
+                              id={`${category.id}-${section.id}-heading-mobile`}
                               className="font-medium text-gray-900"
                             >
                               {section.name}
@@ -186,7 +186,7 @@ export default function Navigation() {
                             {/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
                             <ul
                               role="list"
-                              aria-labelledby={`${category._id}-${section._id}-heading-mobile`}
+                              aria-labelledby={`${category.id}-${section.id}-heading-mobile`}
                               className="mt-6 flex flex-col space-y-6"
                             >
                               {section.items.map((item) => (
@@ -364,14 +364,14 @@ export default function Navigation() {
                                                 className="flex"
                                               >
                                                 <p
-                                                  // onClick={() =>
-                                                  //   handleCategoryClick(
-                                                  //     category,
-                                                  //     section,
-                                                  //     item,
-                                                  //     close
-                                                  //   )
-                                                  // }
+                                                  onClick={() =>
+                                                    handleCategoryClick(
+                                                      category,
+                                                      section,
+                                                      item,
+                                                      close
+                                                    )
+                                                  }
                                                   className="cursor-pointer hover:text-gray-800"
                                                 >
                                                   {item.name}
@@ -411,19 +411,17 @@ export default function Navigation() {
                     <div>
                       <Avatar
                         className="text-white"
-                        // onClick={handleUserClick}
+                        onClick={handleUserClick}
                         aria-controls={open ? "basic-menu" : undefined}
                         aria-haspopup="true"
                         aria-expanded={open ? "true" : undefined}
-                        // onClick={handleUserClick}
                         sx={{
                           bgcolor: deepPurple[500],
                           color: "white",
                           cursor: "pointer",
                         }}
                       >
-                        N
-                        {/* {auth.user?.firstName[0].toUpperCase()} */}
+                        N{/* {auth.user?.firstName[0].toUpperCase()} */}
                         {/* {auth.user?.lastName[0].toUpperCase()} */}
                       </Avatar>
                       {/* <Button
@@ -439,17 +437,17 @@ export default function Navigation() {
                         id="basic-menu"
                         anchorEl={anchorEl}
                         open={openUserMenu}
-                        // onClose={handleCloseUserMenu}
+                        onClose={handleCloseUserMenu}
                         MenuListProps={{
                           "aria-labelledby": "basic-button",
                         }}
                       >
                         <MenuItem
-                        // onClick={() => navigate("/account/order")}
-                        // onClick={handleMyOrderClick}
+                          onClick={() => navigate("/account/order")}
+                          // onClick={handleMyOrderClick}
                         >
                           {/* {auth.user?.role === "ROLE_ADMIN" */}
-                          {true ? "Admin Dashboard" : "My Orders"}
+                          {false ? "Admin Dashboard" : "My Orders"} 
                         </MenuItem>
                         <MenuItem
                         // onClick={handleLogout}
@@ -460,7 +458,7 @@ export default function Navigation() {
                     </div>
                   ) : (
                     <Button
-                      // onClick={handleOpen}
+                      onClick={handleOpen}
                       className="text-sm font-medium text-gray-700 hover:text-gray-800"
                     >
                       Signin
@@ -486,7 +484,7 @@ export default function Navigation() {
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
                   <Button
-                    // onClick={() => navigate("/cart")}
+                    onClick={() => navigate("/cart")}
                     className="group -m-2 flex items-center p-2"
                   >
                     <ShoppingBagIcon
