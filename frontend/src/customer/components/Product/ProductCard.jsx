@@ -1,14 +1,14 @@
 import React from "react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
-  //   const navigate = useNavigate();
-  //   const handleNavigate = () => {
-  //     navigate(`/product/${product?._id}`);
-  //   };
+  const navigate = useNavigate();
+  const handleNavigate = () => {
+    navigate(`/product/${product?.id ?? 5}`);
+  };
   return (
     <div
-      //   onClick={handleNavigate}
+      onClick={handleNavigate}
       className="w-[15rem] group p-2 mx-3 transition-all cursor-pointer rounded border shadow-md hover:shadow-lg hover:shadow-slate-400"
     >
       <div className="h-[20rem]">
