@@ -12,9 +12,9 @@ app.get("/", (_, res) => {
 });
 
 const authRouter = require("./routes/auth.routes");
-app.use("/auth", authRouter);
+app.use("/api/auth", authRouter);
 
 const userRouter = require("./routes/user.routes");
-app.use("/users", userRouter);
+app.use("/api/users", userRouter);
 
 module.exports = app;
