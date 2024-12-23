@@ -74,7 +74,9 @@ export default function ProductDetails() {
   const product = useSelector((store) => store.products?.product?.product);
   console.log("product", product);
 
-  const [selectedSize, setSelectedSize] = useState(product?.sizes[0]?.name || "S");
+  const [selectedSize, setSelectedSize] = useState(
+    product?.sizes[0]?.name || "S"
+  );
 
   console.log("selectedSize", selectedSize);
   const handleAddToCart = () => {
@@ -189,66 +191,65 @@ export default function ProductDetails() {
               <form className="mt-10">
                 {/* Sizes */}
                 <div className="mt-10">
-  <div className="flex items-center justify-between">
-    <h3 className="text-sm font-medium text-gray-900">Size</h3>
-  </div>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-medium text-gray-900">Size</h3>
+                  </div>
 
-  <fieldset aria-label="Choose a size" className="mt-4">
-    <RadioGroup
-      value={selectedSize}
-      onChange={setSelectedSize} // No need for e.target.value, directly update state
-      className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4"
-    >
-      {product?.sizes?.map((size) => (
-        <RadioGroup.Option
-          key={size.name}
-          value={size.name}
-          disabled={!size.quantity}
-          className={({ active, checked }) =>
-            classNames(
-              size.quantity > 0
-                ? "cursor-pointer bg-white text-gray-900 shadow-sm hover:bg-gray-50 transition duration-200"
-                : "cursor-not-allowed bg-gray-50 text-gray-200",
-              active ? "ring-2 ring-indigo-500" : "",
-              checked ? "border-indigo-500" : "border-gray-400",
-              "group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium uppercase focus:outline-none sm:flex-1 sm:py-6"
-            )
-          }
-        >
-          <span>{size.name}</span>
+                  <fieldset aria-label="Choose a size" className="mt-4">
+                    <RadioGroup
+                      value={selectedSize}
+                      onChange={setSelectedSize} // No need for e.target.value, directly update state
+                      className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4"
+                    >
+                      {product?.sizes?.map((size) => (
+                        <RadioGroup.Option
+                          key={size.name}
+                          value={size.name}
+                          disabled={!size.quantity}
+                          className={({ active, checked }) =>
+                            classNames(
+                              size.quantity > 0
+                                ? "cursor-pointer bg-white text-gray-900 shadow-sm hover:bg-gray-50 transition duration-200"
+                                : "cursor-not-allowed bg-gray-50 text-gray-200",
+                              active ? "ring-2 ring-indigo-500" : "",
+                              checked ? "border-indigo-500" : "border-gray-400",
+                              "group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium uppercase focus:outline-none sm:flex-1 sm:py-6"
+                            )
+                          }
+                        >
+                          <span>{size.name}</span>
 
-          {size.quantity > 0 ? (
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute -inset-px rounded-md border-2 border-transparent group-focus:border-indigo-500 group-checked:border-indigo-500"
-            />
-          ) : (
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute -inset-px rounded-md border-2 border-gray-400"
-            >
-              <svg
-                stroke="currentColor"
-                viewBox="0 0 100 100"
-                preserveAspectRatio="none"
-                className="absolute inset-0 h-full w-full stroke-2 text-gray-400"
-              >
-                <line
-                  x1={0}
-                  x2={100}
-                  y1={100}
-                  y2={0}
-                  vectorEffect="non-scaling-stroke"
-                />
-              </svg>
-            </span>
-          )}
-        </RadioGroup.Option>
-      ))}
-    </RadioGroup>
-  </fieldset>
-</div>
-
+                          {size.quantity > 0 ? (
+                            <span
+                              aria-hidden="true"
+                              className="pointer-events-none absolute -inset-px rounded-md border-2 border-transparent group-focus:border-indigo-500 group-checked:border-indigo-500"
+                            />
+                          ) : (
+                            <span
+                              aria-hidden="true"
+                              className="pointer-events-none absolute -inset-px rounded-md border-2 border-gray-400"
+                            >
+                              <svg
+                                stroke="currentColor"
+                                viewBox="0 0 100 100"
+                                preserveAspectRatio="none"
+                                className="absolute inset-0 h-full w-full stroke-2 text-gray-400"
+                              >
+                                <line
+                                  x1={0}
+                                  x2={100}
+                                  y1={100}
+                                  y2={0}
+                                  vectorEffect="non-scaling-stroke"
+                                />
+                              </svg>
+                            </span>
+                          )}
+                        </RadioGroup.Option>
+                      ))}
+                    </RadioGroup>
+                  </fieldset>
+                </div>
 
                 <Button
                   onClick={handleAddToCart}
