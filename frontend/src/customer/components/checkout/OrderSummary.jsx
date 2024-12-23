@@ -49,18 +49,17 @@ const cart = {
   },
 };
 
-
-  const address = {
-    firstName: "Nageshwar",
-    lastName: "Pawar",
-    address: "Amdura",
-    city: "Nanded",
-    state: "Maharashtra",
-    zip: "431806",
-    country: "India",
-    mobileNumber: "+919503198637",
-    alternateMobileNumber: "+919730870409",
-  };
+const address = {
+  firstName: "Nageshwar",
+  lastName: "Pawar",
+  address: "Amdura",
+  city: "Nanded",
+  state: "Maharashtra",
+  zip: "431806",
+  country: "India",
+  mobileNumber: "+919503198637",
+  alternateMobileNumber: "+919730870409",
+};
 
 const OrderSummary = () => {
   const dispatch = useDispatch();
@@ -90,7 +89,7 @@ const OrderSummary = () => {
         <div className="lg:grid grid-cols-3 my-4 rounded-s-md shadow-lg py-2 relative">
           <div className="col-span-2">
             {/* {order?.orderItems?.map((item) => (
-              <CartItem key={item._id} item={item} />
+              <CartItem key={item.id:} item={item} />
               ))} */}
             <CartItem item={cart} />
           </div>
