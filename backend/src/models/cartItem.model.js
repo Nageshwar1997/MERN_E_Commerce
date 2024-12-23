@@ -7,7 +7,7 @@ const cartItemSchema = new Schema({
   quantity: { type: Number, required: true, default: 1 },
   price: { type: Number, required: true, default: 0 },
   discountedPrice: { type: Number, required: true, default: 0 },
-  userId: { type: Schema.Types.ObjectId, ref: "users", required: true },
+  userId: { type: Schema.Types.ObjectId, ref: "users", required: true }, // if something is wrong use user only
 });
 
 const CartItem = model("cartItems", cartItemSchema);
