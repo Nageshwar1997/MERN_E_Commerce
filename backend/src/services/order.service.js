@@ -15,9 +15,10 @@ const createOrder = async (user, shippAddress) => {
       address.user = user;
       await address.save();
 
-      user.addresses.push(address);
-      // user.address.push(address); // if is there any error try this
+      user.address.push(address);
       await user.save();
+
+      // console.log("user", user);
     }
 
     const cart = await cartService.findUserCart(user._id);
@@ -35,6 +36,8 @@ const createOrder = async (user, shippAddress) => {
 
       const createdOrderItem = await orderItem.save();
       orderItems.push(createdOrderItem);
+
+      console.log("orderItems", orderItems);
     }
 
     const createdOrder = new Order({
@@ -43,7 +46,7 @@ const createOrder = async (user, shippAddress) => {
       totalPrice: cart.totalPrice,
       totalDiscountedPrice: cart.totalDiscountedPrice,
       discounte: cart.discounte,
-      totalItems: cart.totalItem,
+      totalItem: cart.totalItem,
       shippingAddress: address,
     });
 
