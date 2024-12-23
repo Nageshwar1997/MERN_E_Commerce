@@ -21,7 +21,7 @@ const createRating = async (reqData, user) => {
   }
 };
 
-const getProductRatings = async (productId) => {
+const getAllRatings = async (productId) => {
   try {
     const allRatings = await Rating.find({ product: productId });
     // if (!allRatings) {
@@ -33,4 +33,4 @@ const getProductRatings = async (productId) => {
   }
 };
 
-module.exports = { createRating, getProductRatings };
+module.exports = { createRating, getAllRatings };
