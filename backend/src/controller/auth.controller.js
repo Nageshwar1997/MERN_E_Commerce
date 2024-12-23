@@ -165,7 +165,7 @@ const login = async (req, res) => {
 
     const jwt = await jwtProvider.generateToken(user._id);
 
-    return res.status(200).json({
+    return res.status(200).send({
       message: "User logged in successfully",
       jwt,
     });
@@ -179,7 +179,7 @@ const login = async (req, res) => {
   } catch (error) {
     console.error("Error during user login:", error); // Log error for debugging
     return res.status(500).send({
-      message: error.message || "Failed to login user",
+      error: error.message || "Failed to login user",
     });
   }
 };
