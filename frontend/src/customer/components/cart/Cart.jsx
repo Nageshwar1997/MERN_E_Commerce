@@ -1,12 +1,13 @@
 import React from "react"; // { useEffect, useMemo }
 import CartItem from "./CartItem";
 import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
 // import { useDispatch, useSelector } from "react-redux";
 // import { getCart } from "../../../state/cart/action";
 
 const Cart = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   // const dispatch = useDispatch();
 
   // const cart = useSelector((store) => store?.cart?.cart?.cart);
@@ -16,9 +17,9 @@ const Cart = () => {
   //   [store?.cart?.cart?.cart?.cartItems]
   // );
 
-  // const handleCheckout = () => {
-  //   navigate("/checkout?step=2");
-  // };
+  const handleCheckout = () => {
+    navigate("/checkout?step=1");
+  };
 
   // useEffect(() => {
   //   dispatch(getCart());
@@ -122,7 +123,7 @@ const Cart = () => {
                 </span>
               </div>
               <Button
-                // onClick={handleCheckout}
+                onClick={handleCheckout}
                 variant="contained"
                 className="w-full"
                 sx={{
