@@ -14,7 +14,7 @@ const steps = ["Login", "Delivery Address", "Order Summary", "Payment"];
 export default function Checkout() {
   const location = useLocation();
   const querySearch = new URLSearchParams(location.search);
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = React.useState(-1);
 
   const step = parseInt(querySearch.get("step"));
 
@@ -62,7 +62,8 @@ export default function Checkout() {
               
             </Box>
             <div className="mt-10">
-              {Number(step) === 2 ? <DeliveryAddressForm /> : <OrderSummary />}
+              {Number(step) === 1
+               ? <DeliveryAddressForm /> : <OrderSummary />}
             </div>
           </React.Fragment>
         )}

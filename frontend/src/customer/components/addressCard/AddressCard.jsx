@@ -8,13 +8,11 @@ const AddressCard = ({ address }) => {
           {address?.firstName} {address?.lastName}
         </p>
         <p className="capitalize">
-          {address?.address}, {address?.city}, {address?.state},{" "}
-          {address?.country}, {address?.zip}
+          {address?.address}, {address?.city}, {address?.state},{" "} {address?.zip}
         </p>
         <div className="space-y-1">
           <p>Phone Number:</p>
           <p>+91 {address?.mobileNumber?.slice(3, 13)}</p>
-          <p>+91 {address?.alternateMobileNumber?.slice(3, 13)}</p>
         </div>
       </div>
     </div>

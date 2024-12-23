@@ -3,7 +3,7 @@ import {
   combineReducers,
   legacy_createStore as createStore,
 } from "redux";
-import { thunk } from "redux-thunk";
+import thunk from "redux-thunk";
 import { authReducer } from "./auth/reducer";
 import { customerProductReducer } from "./product/reducer";
 import { cartReducer } from "./cart/reducer";
