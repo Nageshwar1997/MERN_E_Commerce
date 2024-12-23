@@ -11,4 +11,10 @@ app.get("/", (_, res) => {
   res.status(200).send("Welcome to E-commerce App Backend");
 });
 
+const authRouter = require("./routes/auth.routes");
+app.use("/auth", authRouter);
+
+const userRouter = require("./routes/user.routes");
+app.use("/users", userRouter);
+
 module.exports = app;
