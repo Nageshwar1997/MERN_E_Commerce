@@ -46,7 +46,7 @@ const getUserProfile = async (req, res) => {
   } catch (error) {
     console.error("Error retrieving user profile:", error);
     return res.status(500).send({
-      message: error.message || "Failed to retrieve user profile",
+      error: error.message || "Failed to retrieve user profile",
     });
   }
 };
@@ -59,7 +59,7 @@ const getAllUsers = async (req, res) => {
   } catch (error) {
     console.error("Error retrieving users:", error);
     return res.status(500).send({
-      message: error.message || "Failed to retrieve users",
+      error: error.message || "Failed to retrieve users",
     });
   }
 };
