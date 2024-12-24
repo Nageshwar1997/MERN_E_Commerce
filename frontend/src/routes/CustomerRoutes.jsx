@@ -13,8 +13,6 @@ import OrderDetails from "../customer/components/order/OrderDetails";
 const CustomerRoutes = () => {
   const location = useLocation();
 
-  console.log("location", location);
-  console.log("location.pathname", location.pathname);
   return (
     <div>
       <div className="">
