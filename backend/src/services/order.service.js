@@ -7,6 +7,8 @@ const createOrder = async (user, shippAddress) => {
   try {
     let address;
 
+    // console.log("shippAddress._id", shippAddress._id);
+
     if (shippAddress._id) {
       let existAddress = await Address.findById(shippAddress._id);
       address = existAddress;
@@ -37,7 +39,7 @@ const createOrder = async (user, shippAddress) => {
       const createdOrderItem = await orderItem.save();
       orderItems.push(createdOrderItem);
 
-      console.log("orderItems", orderItems);
+      // console.log("orderItems", orderItems);
     }
 
     const createdOrder = new Order({

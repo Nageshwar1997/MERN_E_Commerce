@@ -13,7 +13,7 @@ const createProduct = async (reqData) => {
         level: 1,
       });
 
-      // await topLevel.save();
+      await topLevel.save();
     }
 
     let secondLevel = await Category.findOne({
@@ -28,7 +28,7 @@ const createProduct = async (reqData) => {
         level: 2,
       });
 
-      // await secondLevel.save();
+      await secondLevel.save();
     }
 
     let thirdLevel = await Category.findOne({
@@ -43,7 +43,7 @@ const createProduct = async (reqData) => {
         level: 3,
       });
 
-      // await thirdLevel.save();
+      await thirdLevel.save();
     }
 
     const product = new Product({
@@ -55,8 +55,7 @@ const createProduct = async (reqData) => {
       imageUrl: reqData.imageUrl,
       brand: reqData.brand,
       price: reqData.price,
-      sizes: reqData.size,
-      // sizes: reqData.sizes,
+      sizes: reqData.sizes,
       quantity: reqData.quantity,
       category: thirdLevel._id,
     });
@@ -155,9 +154,11 @@ const getAllProducts = async (reqQuery) => {
     }
 
     // Size filtering
+    // console.log("sizes", sizes);
     if (sizes) {
-      //   const sizeSet = new Set(sizes.split(",").map((size) => size.trim()));
-      const sizeSet = new Set(sizes);
+
+        const sizeSet = new Set(sizes.split(",").map((size) => size.trim()));
+      // const sizeSet = new Set(sizes);
       query = query.where("sizes.name").in([...sizeSet]);
     }
 

@@ -3,9 +3,7 @@ const userService = require("../services/user.service");
 
 const updateCartItem = async (userId, cartItemId, cartItemData) => {
   try {
-    // console.log("userId, cartItemId, cartItemData", userId, cartItemId, cartItemData);
     const item = await findCartItemById(cartItemId);
-    // console.log("item", item);
 
     if (!item) {
       throw new Error("Cart item not found with given id", cartItemId);
@@ -60,10 +58,7 @@ const removeCartItem = async (userId, cartItemId) => {
 
 const findCartItemById = async (cartItemId) => {
   try {
-    const cartItem = await CartItem.findById(cartItemId);
-    //   .populate("product");
-
-    // console.log("cartItem", cartItem);
+    const cartItem = await CartItem.findById(cartItemId).populate("product");
 
     if (!cartItem) {
       throw new Error("Cart item not found with given id", cartItemId);
