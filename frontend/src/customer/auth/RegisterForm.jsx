@@ -1,9 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Button, Grid, TextField } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { getUser, register } from "../../state/auth/action";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const jwt = localStorage.getItem("jwt");
+  const auth  = useSelector((store) => store.auth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,10 +30,16 @@ const RegisterForm = () => {
       return;
     }
 
-    // dispatch(register(userData));
+    dispatch(register(userData));
 
     console.log("userData", userData);
   };
+
+  useEffect(() => {
+    if (jwt) {
+      dispatch(getUser(jwt));
+    }
+  }, [jwt, auth?.jwt]);
 
   return (
     <div>

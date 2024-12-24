@@ -1,11 +1,17 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Button, Grid, TextField } from "@mui/material";
-import React from "react";
-// import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { getUser, login } from "../../state/auth/action";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  //   const dispatch = useDispatch();
+  const dispatch = useDispatch();
+
+  const auth = useSelector((store) => store.auth);
+
+  const jwt = localStorage.getItem("jwt");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,10 +23,16 @@ const LoginForm = () => {
       password: data.get("password"),
     };
 
-    // dispatch(login(userData));
+    dispatch(login(userData));
 
     console.log("userData", userData);
   };
+
+  useEffect(() => {
+    if (jwt) {
+      dispatch(getUser(jwt));
+    }
+  }, [jwt, auth?.jwt]);
 
   return (
     <div>
@@ -29,6 +41,7 @@ const LoginForm = () => {
           <Grid item xs={12}>
             <TextField
               required
+              type="email"
               id="email"
               name="email"
               label="Email"
@@ -39,6 +52,7 @@ const LoginForm = () => {
           <Grid item xs={12}>
             <TextField
               required
+              type="password"
               id="password"
               name="password"
               label="Password"
