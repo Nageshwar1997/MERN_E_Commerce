@@ -10,7 +10,7 @@ const userSchema = new Schema({
     required: true,
     default: "CUSTOMER",
   },
-  mobile: { type: String, required: true },
+  mobile: { type: String },
   address: [{ type: Schema.Types.ObjectId, ref: "addresses" }],
   paymentInformation: [
     { type: Schema.Types.ObjectId, ref: "payment_information" },
