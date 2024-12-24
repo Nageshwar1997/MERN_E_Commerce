@@ -14,7 +14,7 @@ import { deepPurple } from "@mui/material/colors";
 // import TextField from "@mui/material/TextField";
 import { navigationData } from "./navigationData";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-// import AuthModal from "../../auth/AuthModal";
+import AuthModal from "../../auth/AuthModal";
 // import { useDispatch, useSelector } from "react-redux";
 // import { getUser, logout } from "../../../state/auth/action";
 
@@ -53,6 +53,7 @@ export default function Navigation() {
   };
   const handleClose = () => {
     setOpenAuthModal(false);
+    navigate("/");
   };
 
   const handleCategoryClick = (category, section, item, close) => {
@@ -407,7 +408,7 @@ export default function Navigation() {
               <div className="ml-auto flex items-center">
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   {/* {auth.user ? ( */}
-                  {true ? (
+                  {false ? (
                     <div>
                       <Avatar
                         className="text-white"
@@ -447,7 +448,7 @@ export default function Navigation() {
                           // onClick={handleMyOrderClick}
                         >
                           {/* {auth.user?.role === "ROLE_ADMIN" */}
-                          {false ? "Admin Dashboard" : "My Orders"} 
+                          {false ? "Admin Dashboard" : "My Orders"}
                         </MenuItem>
                         <MenuItem
                         // onClick={handleLogout}
@@ -502,7 +503,7 @@ export default function Navigation() {
           </div>
         </nav>
       </header>
-      {/* <AuthModal handleClose={handleClose} open={openAuthModal} /> */}
+      <AuthModal handleClose={handleClose} open={openAuthModal} />
     </div>
   );
 }
