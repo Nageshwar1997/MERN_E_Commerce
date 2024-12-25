@@ -18,10 +18,6 @@ export default function Checkout() {
 
   const step = parseInt(querySearch.get("step"));
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -52,18 +48,15 @@ export default function Checkout() {
             <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
               <Button
                 color="inherit"
-                disabled={activeStep === 0}
+                disabled={activeStep <= 1}
                 onClick={handleBack}
                 sx={{ mr: 1 }}
               >
                 Back
               </Button>
-
-              
             </Box>
             <div className="mt-10">
-              {Number(step) === 1
-               ? <DeliveryAddressForm /> : <OrderSummary />}
+              {Number(step) === 1 ? <DeliveryAddressForm /> : <OrderSummary />}
             </div>
           </React.Fragment>
         )}
