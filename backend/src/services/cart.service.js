@@ -19,7 +19,7 @@ const createCart = async (user) => {
 
 const findUserCart = async (userId) => {
   try {
-    let cart = await Cart.findOne({ user: userId });
+    let cart = await Cart.findOne({ user: userId }).populate("user");
     let cartItems = await CartItem.find({ cart: cart._id }).populate("product");
 
     cart.cartItems = cartItems;
@@ -27,19 +27,18 @@ const findUserCart = async (userId) => {
     let totalDiscountedPrice = 0;
     let totalItem = 0;
 
-    for(let cartItem of cart.cartItems){
+    for (let cartItem of cart.cartItems) {
       totalPrice += cartItem.price;
       totalDiscountedPrice += cartItem.discountedPrice;
       totalItem += cartItem.quantity;
     }
 
-
     cart.totalPrice = totalPrice;
     cart.totalDiscountedPrice = totalDiscountedPrice;
     cart.totalItem = totalItem;
-    cart.totalDiscount = totalPrice - totalDiscountedPrice;
+    cart.discounte = totalPrice - totalDiscountedPrice;
 
-    // await cart.save();
+    await cart.save();
 
     return cart;
   } catch (error) {
@@ -51,14 +50,7 @@ const addCartItem = async (userId, req) => {
   try {
     const cart = await Cart.findOne({ user: userId });
 
-    // if (!cart) {
-    //   throw new Error("Cart not found");
-    // }
-
     const product = await Product.findById(req.productId);
-    // if (!product) {
-    //   throw new Error("Product not found");
-    // }
 
     const isPresent = await CartItem.findOne({
       cart: cart._id,
@@ -89,8 +81,4 @@ const addCartItem = async (userId, req) => {
     throw new Error(error.message || "Failed to add cart item");
   }
 };
-module.exports = {
-  createCart,
-  findUserCart,
-  addCartItem
-};
+module.exports = { createCart, findUserCart, addCartItem };
