@@ -58,6 +58,10 @@ const addCartItem = async (userId, req) => {
       userId,
     });
 
+    if (isPresent) {
+      return isPresent;
+    }
+
     if (!isPresent) {
       const cartItem = new CartItem({
         product: product._id,
@@ -75,7 +79,7 @@ const addCartItem = async (userId, req) => {
 
       await cart.save();
 
-      return "Item added to cart";
+      return createdCartItem;
     }
   } catch (error) {
     throw new Error(error.message || "Failed to add cart item");
