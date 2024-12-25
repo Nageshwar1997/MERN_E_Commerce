@@ -1,4 +1,5 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
 import { Dialog, Disclosure, Menu } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
@@ -21,8 +22,9 @@ import {
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { filters, singleFilter } from "./filtersData";
 import sortOptions from "./sortData";
-import { mens_kurta } from "../../data/Men/men_kurta";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { findProducts } from "../../../state/product/action";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -30,10 +32,26 @@ function classNames(...classes) {
 
 export default function Product() {
   const { search } = useLocation();
+
   const navigate = useNavigate();
+  const param = useParams();
+  const dispatch = useDispatch();
+  const products = useSelector((store) => store.products.products);
+
+  console.log("products", products);
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
+  const decodedQueryString = decodeURIComponent(search);
+  const searchParams = new URLSearchParams(decodedQueryString);
+
+  const colorValue = searchParams.get("color");
+  const sizesValue = searchParams.get("sizes"); // If it's not working try sizesValue = searchParams.get("sizes");
+  const priceValue = searchParams.get("price");
+  const discountValue = searchParams.get("discount");
+  const sortValue = searchParams.get("sort"); // sort is not working currently
+  const pageNumberValue = searchParams.get("page");
+  const stockValue = searchParams.get("stock");
   const handleCheckboxFilterChange = (value, sectionId) => {
     const searchParams = new URLSearchParams(search);
     let filterValue = searchParams.getAll(sectionId);
@@ -59,6 +77,48 @@ export default function Product() {
     const query = searchParams.toString();
     navigate({ search: `?${query}` });
   };
+
+  const handlePaginationChange = (e, value) => {
+    e.preventDefault();
+    const searchParams = new URLSearchParams(search);
+    searchParams.set("page", value);
+
+    const query = searchParams.toString();
+    navigate({ search: `?${query}` });
+  };
+
+  useEffect(() => {
+    const [minPrice, maxPrice] =
+      priceValue === null ? [0, 10000] : priceValue.split("-").map(Number);
+
+    const data = {
+      category: param.levelThree,
+      color: colorValue || [],
+      sizes: sizesValue || [],
+      minPrice: minPrice || 0,
+      maxPrice: maxPrice || 0,
+      minDiscount: discountValue || 0,
+      sort: sortValue || "price_low_to_high",
+      pageNumber: pageNumberValue || 1,
+      stock: stockValue,
+      pageSize: 12,
+    };
+
+    dispatch(findProducts(data));
+
+    // console.log("param.levelOne", param.levelOne);
+    // console.log("param.levelTwo", param.levelTwo);
+    // console.log("param.levelThree", param.levelThree);
+  }, [
+    param.levelThree,
+    colorValue,
+    sizesValue,
+    priceValue,
+    discountValue,
+    sortValue,
+    pageNumberValue,
+    stockValue,
+  ]);
 
   return (
     <div className="bg-white">
@@ -95,7 +155,7 @@ export default function Product() {
               <form className="mt-4 border-t border-gray-200">
                 {filters.map((section) => (
                   <Disclosure
-                    key={section.id}
+                    key={section._id}
                     as="div"
                     className="border-t border-gray-200 px-4 py-6"
                   >
@@ -124,18 +184,18 @@ export default function Product() {
                               onChange={() =>
                                 handleCheckboxFilterChange(
                                   option.value,
-                                  section.id
+                                  section._id
                                 )
                               }
                               defaultValue={option.value}
                               defaultChecked={option.checked}
-                              id={`filter-mobile-${section.id}-${optionIdx}`}
-                              name={`${section.id}[]`}
+                              id={`filter-mobile-${section._id}-${optionIdx}`}
+                              name={`${section._id}[]`}
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             />
                             <label
-                              htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
+                              htmlFor={`filter-mobile-${section._id}-${optionIdx}`}
                               className="ml-3 min-w-0 flex-1 text-gray-500"
                             >
                               {option.label}
@@ -148,7 +208,7 @@ export default function Product() {
                 ))}
                 {singleFilter.map((section) => (
                   <Disclosure
-                    key={section.id}
+                    key={section._id}
                     as="div"
                     className="border-t border-gray-200 px-4 py-6"
                   >
@@ -182,7 +242,7 @@ export default function Product() {
                             {section.options.map((option, optionIdx) => (
                               <FormControlLabel
                                 onChange={(e) =>
-                                  handleRadioFilterChange(e, section.id)
+                                  handleRadioFilterChange(e, section._id)
                                 }
                                 key={option.value}
                                 value={option.value}
@@ -276,7 +336,7 @@ export default function Product() {
                 </div>
                 {filters.map((section) => (
                   <Disclosure
-                    key={section.id}
+                    key={section._id}
                     as="div"
                     className="border-b border-gray-200 py-6"
                   >
@@ -305,18 +365,18 @@ export default function Product() {
                               onChange={() =>
                                 handleCheckboxFilterChange(
                                   option.value,
-                                  section.id
+                                  section._id
                                 )
                               }
                               defaultValue={option.value}
                               defaultChecked={option.checked}
-                              id={`filter-${section.id}-${optionIdx}`}
-                              name={`${section.id}[]`}
+                              id={`filter-${section._id}-${optionIdx}`}
+                              name={`${section._id}[]`}
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             />
                             <label
-                              htmlFor={`filter-${section.id}-${optionIdx}`}
+                              htmlFor={`filter-${section._id}-${optionIdx}`}
                               className="ml-3 text-sm text-gray-600"
                             >
                               {option.label}
@@ -329,7 +389,7 @@ export default function Product() {
                 ))}
                 {singleFilter.map((section) => (
                   <Disclosure
-                    key={section.id}
+                    key={section._id}
                     as="div"
                     className="border-b border-gray-200 py-6"
                   >
@@ -364,7 +424,7 @@ export default function Product() {
                             {section.options.map((option, optionIdx) => (
                               <FormControlLabel
                                 onChange={(e) =>
-                                  handleRadioFilterChange(e, section.id)
+                                  handleRadioFilterChange(e, section._id)
                                 }
                                 key={option.value}
                                 value={option.value}
@@ -383,8 +443,8 @@ export default function Product() {
               {/* Product grid */}
               <div className="lg:col-span-4 w-full">
                 <div className="flex flex-wrap justify-center bg-white py-5">
-                  {mens_kurta.length > 0 &&
-                    mens_kurta.map((item, index) => (
+                  {products?.content?.length > 0 &&
+                    products?.content?.map((item, index) => (
                       <ProductCard key={"productCard" + index} product={item} />
                     ))}
                 </div>
@@ -394,8 +454,8 @@ export default function Product() {
           <section>
             <div className="px-4 py-5 flex justify-center">
               <Pagination
-                count={10}
-                // onChange={handlePaginationChange}
+                count={products?.totalPages}
+                onChange={handlePaginationChange}
                 color="secondary"
               />
             </div>

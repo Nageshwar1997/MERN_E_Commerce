@@ -4,6 +4,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AddressCard from "../addressCard/AddressCard";
+import { createOrder } from "../../../state/order/action";
 // import { createOrder } from "../../../state/order/action";
 
 const DeliveryAddressForm = () => {
@@ -16,32 +17,21 @@ const DeliveryAddressForm = () => {
     const address = {
       firstName: data.get("firstName"),
       lastName: data.get("lastName"),
-      address: data.get("address"),
+      streetAddress: data.get("address"),
       city: data.get("city"),
       state: data.get("state"),
       zip: data.get("zip"),
-      mobileNumber: data.get("mobileNumber"),
+      mobile: data.get("mobile"),
     };
 
 
     console.log("address", address);
 
-    // const orderData = {
-    //   address,
-    //   navigate,
-    // };
-    // dispatch(createOrder(orderData));
-  };
-  const address = {
-    firstName: "Nageshwar",
-    lastName: "Pawar",
-    address: "Amdura",
-    city: "Nanded",
-    state: "Maharashtra",
-    zip: "431806",
-    country: "India",
-    mobileNumber: "+919503198637",
-    alternateMobileNumber: "+919730870409",
+    const orderData = {
+      address,
+      navigate,
+    };
+    dispatch(createOrder(orderData));
   };
   return (
     <Grid container spacing={4} className="border border-[blue]">
@@ -53,7 +43,7 @@ const DeliveryAddressForm = () => {
       >
         <div className="p-5 py-7 border-b cursor-pointer">
           {/* {auth?.user?.addresses?.map((address,i)=> ( */}
-          <AddressCard address={address} />
+          {/* <AddressCard address={address} /> */}
           {/* ))} */}
           <Button
             sx={{ mt: 2, bgcolor: "RGB(145, 85, 253)" }}
@@ -133,8 +123,8 @@ const DeliveryAddressForm = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
-                  id="mobileNumber"
-                  name="mobileNumber"
+                  id="mobile"
+                  name="mobile"
                   label="Mobile Number"
                   fullWidth
                   autoComplete="given-name"
