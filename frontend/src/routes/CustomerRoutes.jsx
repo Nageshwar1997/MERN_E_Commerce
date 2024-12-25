@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import HomePage from "../customer/pages/HomePage/HomePage";
 import Cart from "../customer/components/cart/Cart";
 import Navigation from "../customer/components/Navigation/Navigation";
@@ -11,8 +11,6 @@ import Order from "../customer/components/order/Order";
 import OrderDetails from "../customer/components/order/OrderDetails";
 
 const CustomerRoutes = () => {
-  const location = useLocation();
-
   return (
     <div>
       <div className="">
