@@ -130,15 +130,12 @@ export const cartReducer = (state = initialState, action) => {
     case UPDATE_CART_ITEM_REQUEST:
     case REMOVE_CART_ITEM_REQUEST:
     case GET_CART_REQUEST:
-      return {
-        ...state,
-        loading: true,
-        error: null,
-      };
+      return { ...state, loading: true, error: null };
 
     case ADD_ITEM_TO_CART_SUCCESS:
       return {
         ...state,
+        // cartItems: [...state.cartItems, action.payload.cartItems], // Ensure cartItems are added properly
         cartItems: [...state.cartItems, ...action.payload.cartItems], // Ensure cartItems are added properly
         loading: false,
         error: null,
@@ -157,15 +154,18 @@ export const cartReducer = (state = initialState, action) => {
     case REMOVE_CART_ITEM_SUCCESS:
       return {
         ...state,
-        deletedCartItem: action.payload,
+        cartItems: state.cartItems.filter(
+          (item) => item._id !== action.payload
+        ), // check it when executing
         loading: false,
         error: null,
       };
 
     case GET_CART_SUCCESS:
+      // console.log("action.payload",action.payload)
       return {
         ...state,
-        updatedCartItem: action.payload,
+        cartItems: action.payload.cartItems,
         cart: action.payload,
         loading: false,
         error: null,
@@ -175,11 +175,7 @@ export const cartReducer = (state = initialState, action) => {
     case REMOVE_CART_ITEM_FAILURE:
     case UPDATE_CART_ITEM_FAILURE:
     case GET_CART_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
+      return { ...state, loading: false, error: action.payload };
 
     default:
       return state;

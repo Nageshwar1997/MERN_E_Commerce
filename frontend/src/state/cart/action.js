@@ -1,4 +1,4 @@
-import { api } from "../../config/api.config";
+import { api } from "../../config/apiConfig";
 import {
   ADD_ITEM_TO_CART_FAILURE,
   ADD_ITEM_TO_CART_REQUEST,
@@ -41,7 +41,6 @@ export const addItemToCart = (reqData) => async (dispatch) => {
 export const removeCartItem = (cartItemId) => async (dispatch) => {
   dispatch({ type: REMOVE_CART_ITEM_REQUEST });
   try {
-    // console.log("cartItemId", cartItemId);
     const { data } = await api.delete(`/api/cart_items/${cartItemId}`);
     // console.log(data);
 
@@ -78,10 +77,13 @@ export const removeCartItem = (cartItemId) => async (dispatch) => {
 export const updateCartItem = (reqData) => async (dispatch) => {
   dispatch({ type: UPDATE_CART_ITEM_REQUEST });
   try {
+    console.log("reqData updatecartItem", reqData);
     const { data } = await api.put(
       `/api/cart_items/${reqData.cartItemId}`,
       reqData.data
     );
+
+    console.log("data updateCartItem", data);
     dispatch({ type: UPDATE_CART_ITEM_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: UPDATE_CART_ITEM_FAILURE, payload: error.message });
