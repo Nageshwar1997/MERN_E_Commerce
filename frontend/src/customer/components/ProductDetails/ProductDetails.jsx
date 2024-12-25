@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { Radio, RadioGroup } from "@headlessui/react";
 import { Box, Button, Grid, LinearProgress, Rating } from "@mui/material";
@@ -6,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import HomeSectionCard from "../HomeSectionCard/HomeSectionCard";
 import { mens_kurta } from "../../data/Men/men_kurta";
 import ProductReviewCard from "./ProductReviewCard";
+import { findProductById } from "../../../state/product/action";
+import { addItemToCart } from "../../../state/cart/action";
 
 const dummyProduct = {
   name: "Basic Tee 6-Pack",
@@ -15,8 +18,8 @@ const dummyProduct = {
   discountPercent: "25",
   href: "#",
   breadcrumbs: [
-    { id: 1, name: "Men", href: "#" },
-    { id: 2, name: "Clothing", href: "#" },
+    { _id: 1, name: "Men", href: "#" },
+    { _id: 2, name: "Clothing", href: "#" },
   ],
   images: [
     {
@@ -71,9 +74,8 @@ export default function ProductDetails() {
   const navigate = useNavigate();
   const params = useParams();
   const dispatch = useDispatch();
-  const { pathname } = useLocation();
-  const product = useSelector((store) => store.products?.product?.product);
-  console.log("product", product);
+  const product = useSelector((store) => store.products.product);
+  const loading = useSelector((store) => store.products.loading);
 
   const [selectedSize, setSelectedSize] = useState(
     product?.sizes[0]?.name || "S"
@@ -82,13 +84,14 @@ export default function ProductDetails() {
   console.log("selectedSize", selectedSize);
   const handleAddToCart = () => {
     const data = { productId: params.productId, size: selectedSize };
-    // dispatch(addItemToCart(data));
+    console.log("data", data);
+    dispatch(addItemToCart(data));
     navigate("/cart");
   };
 
-  //   useEffect(() => {
-  //     dispatch(findProductById(params.productId));
-  //   }, [params.productId]);
+  useEffect(() => {
+    dispatch(findProductById(params.productId));
+  }, [params.productId]);
 
   return (
     <div className="bg-white lg:px-20">
@@ -96,7 +99,7 @@ export default function ProductDetails() {
         <nav aria-label="Breadcrumb">
           <ol className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
             {dummyProduct.breadcrumbs.map((breadcrumb) => (
-              <li key={breadcrumb.id}>
+              <li key={breadcrumb._id}>
                 <div className="flex items-center">
                   <a
                     href={breadcrumb.href}
@@ -118,13 +121,9 @@ export default function ProductDetails() {
               </li>
             ))}
             <li className="text-sm">
-              <a
-                href={pathname}
-                aria-current="page"
-                className="font-medium text-gray-500 hover:text-gray-600 transition duration-200"
-              >
-                {dummyProduct?.name}
-              </a>
+              <p className="font-medium text-gray-500 hover:text-gray-600 transition duration-200 capitalize">
+                {loading === false && product?.category?.name}
+              </p>
             </li>
           </ol>
         </nav>
@@ -133,11 +132,13 @@ export default function ProductDetails() {
           {/* Image gallery */}
           <div className="flex flex-col items-center">
             <div className="overflow-hidden rounded-lg max-w-[30rem] max-h-[35rem] shadow-lg transition-transform transform hover:scale-105">
-              <img
-                alt={dummyProduct?.name}
-                src={dummyProduct?.images[0].src}
-                className="h-full w-full object-cover object-center"
-              />
+              {loading === false && (
+                <img
+                  alt={product?.name}
+                  src={product?.imageUrl}
+                  className="h-full w-full max-h-[25rem] object-cover object-center"
+                />
+              )}
             </div>
             <div className="flex flex-wrap space-x-5 justify-center mt-4">
               {dummyProduct.images.map((img, i) => (
@@ -158,10 +159,10 @@ export default function ProductDetails() {
           <div className="lg:col-span-1 mx-auto max-w-2xl px-4 pb-16 sm:px-6 lg:max-w-7xl lg:px-8 lg:pb-24">
             <div className="lg:col-span-2">
               <h1 className="text-lg lg:text-xl font-semibold uppercase text-gray-900">
-                {dummyProduct?.brand}
+                {product?.brand}
               </h1>
               <h2 className="text-lg lg:text-xl text-gray-900 opacity-60 pt-1 capitalize">
-                {dummyProduct?.name}
+                {product?.title}
               </h2>
             </div>
 
@@ -169,14 +170,12 @@ export default function ProductDetails() {
             <div className="mt-4 lg:row-span-3 lg:mt-0">
               <h2 className="sr-only">Product information</h2>
               <div className="flex space-x-5 items-center text-lg lg:text-xl text-gray-900 mt-6">
-                <p className="font-semibold">
-                  ₹{dummyProduct?.discountedPrice}
-                </p>
+                <p className="font-semibold">₹{product?.discountedPrice}</p>
                 <p className="font-semibold line-through opacity-50">
-                  ₹{dummyProduct?.price}
+                  ₹{product?.price}
                 </p>
                 <p className="text-green-600 font-semibold">
-                  {dummyProduct?.discountPercent}% OFF
+                  {product?.discountPersent}% OFF
                 </p>
               </div>
 
@@ -204,14 +203,14 @@ export default function ProductDetails() {
                       onChange={setSelectedSize} // No need for e.target.value, directly update state
                       className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4"
                     >
-                      {dummyProduct?.sizes?.map((size) => (
+                      {product?.sizes?.map((size) => (
                         <RadioGroup.Option
-                          key={size.name}
+                          key={size._id}
                           value={size.name}
-                          disabled={!size.inStock}
+                          disabled={size.quantity === 0}
                           className={({ active, checked }) =>
                             classNames(
-                              size.inStock
+                              size.quantity > 0
                                 ? "cursor-pointer bg-white text-gray-900 shadow-sm hover:bg-gray-50 transition duration-200"
                                 : "cursor-not-allowed bg-gray-50 text-gray-200",
                               active ? "ring-2 ring-indigo-500" : "",
@@ -222,7 +221,7 @@ export default function ProductDetails() {
                         >
                           <span>{size.name}</span>
 
-                          {size.inStock ? (
+                          {size.quantity > 0 ? (
                             <span
                               aria-hidden="true"
                               className="pointer-events-none absolute -inset-px rounded-md border-2 border-transparent group-focus:border-indigo-500 group-checked:border-indigo-500"
@@ -277,7 +276,7 @@ export default function ProductDetails() {
                 <h3 className="sr-only">Description</h3>
                 <div className="space-y-6">
                   <p className="text-base text-gray-900">
-                    {dummyProduct?.description}
+                    {product?.description}
                   </p>
                 </div>
               </div>
@@ -288,8 +287,8 @@ export default function ProductDetails() {
                 </h3>
                 <div className="mt-4">
                   <ul className="list-disc space-y-2 pl-4 text-sm">
-                    {dummyProduct.highlights.map((highlight) => (
-                      <li key={highlight} className="text-gray-400">
+                    {dummyProduct.highlights.map((highlight, index) => (
+                      <li key={highlight + index} className="text-gray-400">
                         <span className="text-gray-600">{highlight}</span>
                       </li>
                     ))}
