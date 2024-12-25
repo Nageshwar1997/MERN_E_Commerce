@@ -11,6 +11,7 @@ const initialState = {
   orders: [],
   order: null,
   loading: false,
+  success: false,
   error: null,
 };
 
@@ -29,6 +30,7 @@ export const orderReducer = (state = initialState, action) => {
         ...state,
         order: action.payload,
         loading: false,
+        success:true,
         error: null,
       };
 
@@ -37,6 +39,7 @@ export const orderReducer = (state = initialState, action) => {
         ...state,
         order: action.payload,
         loading: false,
+        success: true,
         error: null,
       };
 
