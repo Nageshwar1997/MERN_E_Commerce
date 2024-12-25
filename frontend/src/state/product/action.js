@@ -1,4 +1,4 @@
-import { api } from "../../config/api.config";
+import { api } from "../../config/apiConfig";
 import {
   FIND_PRODUCT_BY_ID_FAILURE,
   FIND_PRODUCT_BY_ID_REQUEST,
@@ -28,7 +28,7 @@ export const findProducts = (reqData) => async (dispatch) => {
       `/api/products?color=${color}&sizes=${sizes}&minPrice=${minPrice}&maxPrice=${maxPrice}&minDiscount=${minDiscount}&category=${category}&stock=${stock}&sort=${sort}&pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
 
-    // console.log("products", data);
+    console.log("products", data);
 
     dispatch({ type: FIND_PRODUCTS_SUCCESS, payload: data });
   } catch (error) {
