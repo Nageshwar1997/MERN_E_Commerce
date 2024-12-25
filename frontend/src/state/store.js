@@ -6,15 +6,15 @@ import {
 import thunk from "redux-thunk";
 import { authReducer } from "./auth/reducer";
 import { customerProductReducer } from "./product/reducer";
-// import { cartReducer } from "./cart/reducer";
-// import { orderReducer } from "./order/reducer";
+import { cartReducer } from "./cart/reducer";
+import { orderReducer } from "./order/reducer";
 // import { paymentReducer } from "./payment/reducer";
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  product: customerProductReducer,
-  // cart: cartReducer,
-  // order: orderReducer,
+  products: customerProductReducer,
+  cart: cartReducer,
+  order: orderReducer,
   // payment: paymentReducer,
 });
 
