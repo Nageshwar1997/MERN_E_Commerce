@@ -11,7 +11,7 @@ const colors = [
 
 const filters = [
   {
-    id: "color",
+    _id: "color",
     name: "Color",
     options: [
       {
@@ -61,7 +61,7 @@ const filters = [
     ],
   },
   {
-    id: "sizes",
+    _id: "sizes",
     name: "Size",
     options: [
       {
@@ -94,7 +94,7 @@ const filters = [
 
 const singleFilter = [
   {
-    id: "price",
+    _id: "price",
     name: "Price",
     options: [
       {
@@ -120,7 +120,7 @@ const singleFilter = [
     ],
   },
   {
-    id: "discount",
+    _id: "discount",
     name: "Discount Range",
     options: [
       {
@@ -158,7 +158,7 @@ const singleFilter = [
     ],
   },
   {
-    id: "stock",
+    _id: "stock",
     name: "Availability",
     options: [
       {

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const handleNavigate = () => {
-    navigate(`/product/${product?.id ?? 5}`);
+    navigate(`/product/${product?._id}`);
   };
   return (
     <div
@@ -27,7 +27,7 @@ const ProductCard = ({ product }) => {
           <p className="font-semibold">{"₹" + product?.discountedPrice}</p>
           <p className="line-through opacity-50">{"₹" + product?.price}</p>
           <p className="text-green-600 font-semibold">
-            {product?.discountedPrice + "% OFF"}
+            {product?.discountPersent + "% OFF"}
           </p>
         </div>
       </div>

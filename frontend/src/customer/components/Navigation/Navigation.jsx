@@ -56,7 +56,7 @@ export default function Navigation() {
   };
 
   const handleCategoryClick = (category, section, item, close) => {
-    navigate(`/${category.id}/${section.id}/${item.id}`);
+    navigate(`/${category._id}/${section._id}/${item._id}`);
     close();
   };
 
@@ -178,7 +178,7 @@ export default function Navigation() {
                         {category.sections.map((section) => (
                           <div key={section.name}>
                             <p
-                              id={`${category.id}-${section.id}-heading-mobile`}
+                              id={`${category._id}-${section._id}-heading-mobile`}
                               className="font-medium text-gray-900"
                             >
                               {section.name}
@@ -186,7 +186,7 @@ export default function Navigation() {
                             {/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
                             <ul
                               role="list"
-                              aria-labelledby={`${category.id}-${section.id}-heading-mobile`}
+                              aria-labelledby={`${category._id}-${section._id}-heading-mobile`}
                               className="mt-6 flex flex-col space-y-6"
                             >
                               {section.items.map((item) => (
